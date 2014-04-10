@@ -93,7 +93,7 @@ void BBFlower::triggerSample(){
   _sampleTriggered = true;
 
   p_currentSample = getRandomSample(); 
-
+  p_currentSample->triggerOn();
   // Serial.println(p_currentSample->description());
 
 }
