@@ -35,8 +35,8 @@ void BBFlower::update(){
 
 
   int sensorValue = p_sensor->read();
-  Serial.println(F("sensor value: "));
-  Serial.println(sensorValue);
+  // Serial.println(F("sensor value: "));
+  // Serial.println(sensorValue);
 
   (sensorValue == -1) ? stopSample() : triggerSample();
   
@@ -51,9 +51,9 @@ BBSample* BBFlower::getRandomSample(){
   // get item from array and return by reference
   int num = rand() % _numSamples;
   // Serial.print("getting random sample at index: ");
-  Serial.println(F("\n--getting random sample at index"));
+  // Serial.println(F("\n--getting random sample at index"));
   // Serial.println(rand());
-  Serial.println(num);
+  // Serial.println(num);
   BBSample* sample = p_samples + num;
   // BBSample sample = BBSample(1,2,3);
   // Serial.println(sample->description());
@@ -89,7 +89,7 @@ bool BBFlower::isDisabled(){
 void BBFlower::triggerSample(){
   if (_sampleTriggered) return;
   // Serial.println(*p_sensor, HEX)
-  Serial.println(F("trigger sample"));
+  // Serial.println(F("trigger sample"));
   _sampleTriggered = true;
 
   p_currentSample = getRandomSample(); 
@@ -100,7 +100,7 @@ void BBFlower::triggerSample(){
 
 void BBFlower::stopSample(){
   if(!_sampleTriggered) return;
-  Serial.println(F("stopping sample"));
+  // Serial.println(F("stopping sample"));
   p_currentSample->triggerOff();
   _sampleTriggered = false;
 }

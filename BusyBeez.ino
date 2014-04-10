@@ -163,7 +163,7 @@ void deactivateFlowers(){
 }
 
 void deactivateRoom(){
-  Serial.println(F("--- deactivate room\n ---"));
+  // Serial.println(F("--- deactivate room\n ---"));
   setRoomState(ROOM_STATE_INACTIVE);
 
   deactivateFlowers();
@@ -171,7 +171,7 @@ void deactivateRoom(){
 }
 
 void activateRoom(){
-  Serial.println(F("--- activate room\n ---"));
+  // Serial.println(F("--- activate room\n ---"));
   setRoomState(ROOM_STATE_ACTIVE);
   activateFlowers();
   triggerRoomAmbienceOn();

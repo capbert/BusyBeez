@@ -18,8 +18,8 @@ BBSample::BBSample(int ch, int note, String name){
 }
 
 void BBSample::triggerOn(){
-  String str = description();
-  Serial.print(String("triggering sample: " + str));
+  // String str = description();
+  // Serial.print(String("triggering sample: " + str));
   
   MIDI.sendNoteOn(_note, _velocity, _channel);
 }
