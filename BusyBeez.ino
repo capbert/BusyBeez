@@ -173,7 +173,7 @@ void deactivateRoom(){
 void activateRoom(){
   Serial.println(F("--- activate room\n ---"));
   setRoomState(ROOM_STATE_ACTIVE);
-  activateRoom();
+  activateFlowers();
   triggerRoomAmbienceOn();
 
 }
