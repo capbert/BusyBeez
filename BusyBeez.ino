@@ -5,88 +5,67 @@
 
 #include "SimpleTimer.h"
 
-#include "BBConstants.h"
-#include "BBsample.h"
+#include "BBSample.h"
 #include "BBSensor.h"
 #include "BBFlower.h"
 
+#include "BBConstants.h"
+#include "BBUtils.h"
+
+#include "SimpleTimer.h"
 
 
 
 
-
-
-RoomState roomState = ROOM_STATE_INACTIVE;
 
 int roomSensePin = 2;                                                   //motion sensor digital pin def
 int proxSensePin1 = 1;                                                  //proximity sensor analog pin def
-static const int NUM_FLOWER_SAMPLES = 7;
-static const int NUM_FLOWERS = 2;
-static const int NUM_AMBIENCE_SAMPLES = 2;
-// Samples
-static BBSample g_flowerSamples[] = {
-  BBSample(1, 12, "Red Wing Blackbird"),
-  BBSample(2, 13, "Mourning Dove"),
-  BBSample(3, 14, "Black Throated Green Warbler"),
-  BBSample(4, 15, "Bluebird"),
-  BBSample(5, 16, "Robin"),
-  BBSample(6, 17, "Catbird"),
-  BBSample(7, 18, "GoldFinch"),
-  BBSample(8, 19, "White Throated Sparrow"),
-  BBSample(9, 20, "Yellow Throated Warbler"),
-  BBSample(10, 21, "Black Throated Blue Warbler"),
-  BBSample(11, 22, "Nashville Warbler"),
-  BBSample(12, 23, "Phoebe")
+// static const int NUM_FLOWER_SAMPLES = 7;
+// static const int NUM_FLOWERS = 2;
+// static const int NUM_AMBIENCE_SAMPLES = 2;
+
+bool noFlowerSamplesPlaying = true;
+
+
+enum RoomState {
+  ROOM_STATE_ACTIVE,
+  ROOM_STATE_CLOSING,
+  ROOM_STATE_INACTIVE
 };
 
-static BBSample g_ambienceSamples[] = {
-  BBSample(15, 24, "Field"),
-  BBSample(16, 25, "Bees")
-};
-
-
-
-
-// Sensors
-BBSensor roomMotionSensor(BBSensor::DIGITAL);
-
-
-BBSensor proxSensor0(BBSensor::ANALOG);
-BBSensor proxSensor1(BBSensor::ANALOG);
-BBSensor proxSensor2(BBSensor::ANALOG);
-BBSensor proxSensor3(BBSensor::ANALOG);
-BBSensor proxSensor4(BBSensor::ANALOG);
-BBSensor proxSensor5(BBSensor::ANALOG);
-
-
-// Flowers
-
-BBFlower g_flowers[NUM_FLOWERS] = {
-  BBFlower(g_flowerSamples, NUM_FLOWER_SAMPLES),
-  BBFlower(g_flowerSamples, NUM_FLOWER_SAMPLES),
-  // BBFlower(g_flowerSamples, NUM_FLOWERS),
-  // BBFlower(g_flowerSamples, NUM_FLOWERS),
-  // BBFlower(g_flowerSamples, NUM_FLOWERS),
-  // BBFlower(g_flowerSamples, NUM_FLOWERS)
-  };
+RoomState roomState = ROOM_STATE_INACTIVE;
 
 
 
 void setup(){
   // timer.setInterval(500, testFn);
 
+
+  // for(int i = 0; i<NUM_FLOWER_SAMPLES; i++){
+  //   g_FlowerSamples[i].setTimer(&g_Timer);
+  // }
+  // for(int j = 0; j<NUM_AMBIENCE_SAMPLES; j++){
+  //   g_AmbienceSamples[j].setTimer(&g_Timer);
+  // }
+
+
+
+
   MIDI.begin(115200);
   Serial.begin(115200);
 
+  // attachInterrupt(0, activateRoom, RISING); // activate the room on motion
 
-  roomMotionSensor.setPin(roomSensePin);
-  roomMotionSensor.setInputRange(0,1);
-  roomMotionSensor.setOutputRange(0,1);
+  // setTime(0,0,0,1,1,00);
+  
+  g_RoomMotionSensor.setPin(2);
+  g_RoomMotionSensor.setInputRange(0,1);
+  g_RoomMotionSensor.setOutputRange(0,1);
 
 
 
-  proxSensor0.setPin(0);
-  proxSensor1.setPin(1);
+  g_FlowerProximitySensor0.setPin(0);
+  g_FlowerProximitySensor1.setPin(1);
   // proxSensor2.setPin(2);
   // proxSensor3.setPin(3);
   // proxSensor4.setPin(4);
@@ -94,18 +73,19 @@ void setup(){
 
 
 
-  g_flowers[0].setSensor(&proxSensor0);
-  g_flowers[1].setSensor(&proxSensor1);
-  // g_flowers[2].setSensor(&proxSensor2);
-  // g_flowers[3].setSensor(&proxSensor3);
-  // g_flowers[4].setSensor(&proxSensor4);
-  // g_flowers[5].setSensor(&proxSensor5);
+  g_Flowers[0].setSensor(&g_FlowerProximitySensor0);
+  g_Flowers[1].setSensor(&g_FlowerProximitySensor1);
+  // g_Flowers[2].setSensor(&proxSensor2);
+  // g_Flowers[3].setSensor(&proxSensor3);
+  // g_Flowers[4].setSensor(&proxSensor4);
 
-
+  // g_Flowers[5].setSensor(&proxSensor5);
 }
 
 void loop(){
 
+  // g_Timer.run();
+  // g_flowerSamples->triggerOff();
 
   checkRoomState();
 
@@ -113,27 +93,35 @@ void loop(){
     updateFlowers();
   }
 
-  delay(1000);
+  // printf("testing the printer");
+
+  delay(100);
 }
 
 
 void updateFlowers(){
+  bool allOff = true;
   for( int i = 0; i<NUM_FLOWERS; i++){
-
     // Serial.print("Updating flower at index: ");
     // Serial.println(i);
 
-    g_flowers[i].update();
+    g_Flowers[i].update();
+    allOff = g_Flowers[i].isTriggered() ? false : allOff;
   }
+  // if all flowers are 'off' then the room can close
+  
+  if(allOff){
+    printf("update flowers: all off");
+  }else{
+    printf("update flowers: still running");
+  }
+  // print(allOff);
+  noFlowerSamplesPlaying = allOff;
 }
 
 void checkRoomState(){
   // poll room sensors... only one right now
-  int sensorVal = roomMotionSensor.read();
-  // Serial.println(F("read room sensor"));
-  // Serial.println(sensorVal);
-  // Serial.println(roomState == ROOM_STATE_ACTIVE);
-
+  int sensorVal = g_RoomMotionSensor.read();
 
 
   if (roomState == ROOM_STATE_ACTIVE){
@@ -150,28 +138,31 @@ void checkRoomState(){
 
 }
 
+
+
 void activateFlowers(){
   for(int i = 0; i< NUM_FLOWERS; i++){
-    g_flowers[i].enable();
+    g_Flowers[i].enable();
   }
 }
 
 void deactivateFlowers(){
   for(int i = 0; i< NUM_FLOWERS; i++){
-    g_flowers[i].disable();
+    g_Flowers[i].disable();
   }
 }
 
 void deactivateRoom(){
   // Serial.println(F("--- deactivate room\n ---"));
-  setRoomState(ROOM_STATE_INACTIVE);
-
+  if (noFlowerSamplesPlaying) return; // don't deactivate if flowers are playing
   deactivateFlowers();
-  triggerRoomAmbienceOff();
+  if (triggerRoomAmbienceOff()){
+    setRoomState(ROOM_STATE_INACTIVE);
+  }
 }
 
 void activateRoom(){
-  // Serial.println(F("--- activate room\n ---"));
+  printf("--- activate room ---");
   setRoomState(ROOM_STATE_ACTIVE);
   activateFlowers();
   triggerRoomAmbienceOn();
@@ -185,60 +176,22 @@ void setRoomState(RoomState state){
 
 void triggerRoomAmbienceOn(){
   // trigger midi on
+  printf("trigger room on");
   for(int i = 0; i < NUM_AMBIENCE_SAMPLES; i++){
-    g_ambienceSamples[i].triggerOn(); 
+    g_AmbienceSamples[i].triggerOn(); 
   }
 }
 
-void triggerRoomAmbienceOff(){
+bool triggerRoomAmbienceOff(){
   // trigger midi off
+  printf("trigger room off");
+  bool allOff = true;
   for(int i = 0; i < NUM_AMBIENCE_SAMPLES; i++){
-    g_ambienceSamples[i].triggerOff(); 
+    g_AmbienceSamples[i].triggerOff(); 
+    allOff = g_Flowers[i].isTriggered() ? false : allOff;
   }
+  return allOff;
 }
 
 
 
-
-/*
-
-Chris' orininal code for reference
-
-
-
-*/
-
-
-
-  // int val1 = digitalRead(roomSensePin);                                 //initialize variables to hold the read each time through loop
-  // int val2 = analogRead(proxSensePin1);
-
-  // if( roomState == 1 ){                                                 //if the room is full
-  //     if(val1 == LOW){                                                  //if the motion sensor sees nothing
-  //         roomState = 0;                                                //set state to empty
-  //         MIDI.sendNoteOn(20, 0, 9);                                    //turn off motion sensor sound: really should send an ALL OFF here.
-  //      }
-
-  //      if ( (val2 >= 300) && (proxSenseState1 !=1) ){                   //if prox sensor sees useful value (really should be 50ish, not 300)
-  //         proxSenseState1 = 1;                                          //set prox sensor state to engaged
-  //         MIDI.sendNoteOn(14, 75, 9);                                   //play sound for this prox sensor
-  //      }
-       
-  //      if( (val2 < 300) && (proxSenseState1 == 1) ){                    //if prox sensor was engaged, but now value too low
-  //         MIDI.sendNoteOn(14, 0, 9);                                    //stop sound from playing
-  //         proxSenseState1 = 0;                                          //set prox sensor state to NOT engaged
-  //      }
-  // }
-  // else{                                                                 //else, room is empty, let's check to see if full                                                                 
-  //     if(val1 == HIGH){                                                 //if room full
-  //         roomState = 1;                                                //set room state to full
-  //         MIDI.sendNoteOn(20, 75, 9);                                   //play the room ambience sounds
-  //     }
-  // }
-
-
-/*
-
-END REFERENCE
-
-*/

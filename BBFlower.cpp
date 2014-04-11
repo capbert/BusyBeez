@@ -38,6 +38,7 @@ void BBFlower::update(){
   // Serial.println(F("sensor value: "));
   // Serial.println(sensorValue);
 
+
   (sensorValue == -1) ? stopSample() : triggerSample();
   
 
@@ -73,6 +74,9 @@ bool BBFlower::isDisabled(){
   return !_enabled;
 }
 
+bool BBFlower::isTriggered(){
+  return !!_sampleTriggered;
+}
 
 
 // void BBFlower::setSamples(BBSample *samples, int numSamples){
@@ -101,8 +105,10 @@ void BBFlower::triggerSample(){
 void BBFlower::stopSample(){
   if(!_sampleTriggered) return;
   // Serial.println(F("stopping sample"));
-  p_currentSample->triggerOff();
-  _sampleTriggered = false;
+  if(p_currentSample->canRetrigger()){
+    p_currentSample->triggerOff();
+    _sampleTriggered = false;
+  }
 }
 
 

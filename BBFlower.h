@@ -56,6 +56,7 @@ public:
   void enable();
   
   bool isDisabled();
+  bool isTriggered();
 
 };
 
