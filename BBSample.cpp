@@ -32,12 +32,12 @@ void BBSample::triggerOn(){
 void BBSample::triggerOff(){
   // bool trigger = canRetrigger();
   
-  if(canRetrigger()){
-      // Serial.println(F("triggerOff"));
-      // String("trigger off: " + _name );
-      printf("trigger off");
+  // if(canRetrigger()){
+
+      printf("trigger sample off");
+      print(_channel);
       MIDI.sendNoteOn(_note, 0, _channel);
-  }
+  // }
 
 }
 

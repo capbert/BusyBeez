@@ -12,7 +12,7 @@
 #include "BBConstants.h"
 #include "BBUtils.h"
 
-#include "SimpleTimer.h"
+// #include "SimpleTimer.h"
 
 
 
@@ -171,6 +171,12 @@ void activateRoom(){
 
 void setRoomState(RoomState state){
   // Not sure if more needs to happen to set room state --- so I abstracted it.
+  if(state == ROOM_STATE_ACTIVE){
+    printf("setting ROOM_STATE_ACTIVE");
+  }else{
+    printf("setting ROOM_STATE_INACTIVE");
+
+  }
   roomState = state;
 }
 
@@ -184,12 +190,17 @@ void triggerRoomAmbienceOn(){
 
 bool triggerRoomAmbienceOff(){
   // trigger midi off
-  printf("trigger room off");
   bool allOff = true;
   for(int i = 0; i < NUM_AMBIENCE_SAMPLES; i++){
     g_AmbienceSamples[i].triggerOff(); 
     allOff = g_Flowers[i].isTriggered() ? false : allOff;
   }
+  if(allOff){
+    printf("trigger room off");    
+  }else{
+    printf("room has not reached timeout yet... keep playing");
+  }
+  
   return allOff;
 }
 
