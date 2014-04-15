@@ -1,15 +1,28 @@
 #include <Arduino.h>
 #include "BBSensor.h"
+#include "Subject.h"
+#include "BBUtils.h"
+
+
+
 
 
 BBSensor::BBSensor(){
 	// Empty
+	setDefaultRanges();	
 }
 
-BBSensor::BBSensor(SensorType sensorType){
+BBSensor::BBSensor(SensorType sensorType):Subject(){
 	_sensorType = sensorType;
+	_avgPeriod = 1000;
+	setDefaultRanges();	
 }
 
+BBSensor::BBSensor(SensorType sensorType, int pin):_pin(pin), Subject(){
+	_sensorType = sensorType;
+	_avgPeriod = 33;
+	setDefaultRanges();	
+}
 // BBSensor::BBSensor(int pin, SensorType sensorType){
 	
 // 	_sensorType = sensorType;
@@ -25,11 +38,16 @@ BBSensor::BBSensor(SensorType sensorType){
 // Public API
 // **********************************************************
 
-void BBSensor::setPin(int pin){
-	_pin = pin;
+
+void BBSensor::begin(){
 	if (_sensorType == DIGITAL)
 		pinMode(_pin, INPUT);
-	setDefaultRanges();
+	
+}
+
+void BBSensor::setPin(int pin){
+	_pin = pin;
+	// begin();
 }
 
 /*
@@ -54,9 +72,14 @@ void BBSensor::setOutputRange(int low, int high){
 
 // get scaled value from sensor
 int BBSensor::read() {
-	int sensorValue = readSensor();
+	// int sensorValue = readSensor();
 	int result = -1;
 	
+	int sensorValue = _runningTotal / _numReads;
+	_runningTotal = 0;
+	_numReads = 0;
+
+
 	
 	if (_sensorType == DIGITAL)
 		return ( sensorValue == 0) ? result : 1; // 0 means off in digital sensor world
@@ -66,37 +89,64 @@ int BBSensor::read() {
 		result = scaleSensorValue(sensorValue);
 	}
 
-	// Serial.print("TYPE =");
-	// Serial.println(_sensorType);
 
-	// if( _sensorType ==  ANALOG){
-	
-	// 	Serial.println(F("read ANALOG sensor value: "));
-
-	// }else{
-		
-	// 	Serial.println(F("read DIGITAL sensor value: "));
-	// }
-
-	// Serial.println(result);
 
 	return result;
 }
+
 
 
 bool BBSensor::isMotionDetected(){
 	return read() > 0;
 }
 
+
+void BBSensor::setAveragingPeriod(int avgMillis){
+	_avgPeriod = avgMillis;
+}
+
+void BBSensor::update(){
+	// printf("update sensor");
+	// static int _lastMillis;
+
+	// printf("---------------");
+	// printf("reading sensor: ");
+	// print((int)this);
+	// print(readSensor());
+	// printf("---------------");
+
+	_runningTotal += readSensor();
+	++ _numReads;
+	
+	int elapsedMillis =  millis() - _lastMillis ;
+
+	// printf("lastMillis");
+	// print(_lastMillis);
+	if(elapsedMillis > _avgPeriod){
+	// 	printf("period elapsed");
+	// 	print((int)this);
+	// printf("-------------");
+
+
+		notify();
+
+		_lastMillis = millis();
+	}
+
+}
+
+
 // **********************************************************
 // Private
 // **********************************************************
 
 void BBSensor::setDefaultRanges(){
-	_inputRange[0] = 200;
-	_inputRange[1] = 550;
-	_outputRange[0] = 0;
-	_outputRange[1] = 127;
+	setInputRange(200,550);
+	setOutputRange(0,127);
+	// _inputRange[0] = 200;
+	// _inputRange[1] = 550;
+	// _outputRange[0] = 0;
+	// _outputRange[1] = 127;
 }
 
 int BBSensor::readSensor(){

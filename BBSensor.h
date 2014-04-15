@@ -1,7 +1,9 @@
 #ifndef BBSensor_h
 #define BBSensor_h
 
-class BBSensor
+#include "Subject.h"
+
+class BBSensor : public Subject
 {
 public:
 	
@@ -9,13 +11,18 @@ public:
 		ANALOG, 
 		DIGITAL
 	};
+
 	BBSensor();
 	BBSensor(SensorType);
-	// BBSensor(int pin, SensorType sensorType);
+	BBSensor(SensorType, int pin);
+	// BBSensor(SensorType, int resolution);
+	void begin();
 	void setPin(int pin);
 	void setInputRange(int low, int high);
 	void setOutputRange(int low, int high);
+	void setAveragingPeriod(int avgMillis);
 	int read();
+	void update();
 	bool isMotionDetected();
 
 private:
@@ -23,6 +30,12 @@ private:
 	int _sensorType;
 	int _inputRange[2];
 	int _outputRange[2];
+	
+	// averaging
+	int _avgPeriod;
+	long _runningTotal;
+	int _numReads;
+	int _lastMillis;
 
 	int readSensor();
 	int scaleSensorValue(int value);

@@ -2,7 +2,7 @@
 #ifndef BBConstants_h
 #define BBConstants_h 
 
-
+#include "BBRoom.h"
 
 
 // =========================== Constants ===========================
@@ -41,15 +41,27 @@ static BBSample g_AmbienceSamples[] = {
 
 // =========================== Sensors ===========================
 
-static BBSensor g_RoomMotionSensor(BBSensor::DIGITAL);
+static BBSensor g_RoomMotionSensor(BBSensor::DIGITAL, 2);
+
+static BBRoom g_Room(g_AmbienceSamples, NUM_AMBIENCE_SAMPLES);
+
+// static BBSensor g_FlowerProximitySensor0(BBSensor::ANALOG, 0);
+// static BBSensor g_FlowerProximitySensor1(BBSensor::ANALOG, 1);
+// static BBSensor g_FlowerProximitySensor2(BBSensor::ANALOG, 2);
+// static BBSensor g_FlowerProximitySensor3(BBSensor::ANALOG, 3);
+// static BBSensor g_FlowerProximitySensor4(BBSensor::ANALOG, 4);
+// static BBSensor g_FlowerProximitySensor5(BBSensor::ANALOG, 5);
 
 
-static BBSensor g_FlowerProximitySensor0(BBSensor::ANALOG);
-static BBSensor g_FlowerProximitySensor1(BBSensor::ANALOG);
-static BBSensor g_FlowerProximitySensor2(BBSensor::ANALOG);
-static BBSensor g_FlowerProximitySensor3(BBSensor::ANALOG);
-static BBSensor g_FlowerProximitySensor4(BBSensor::ANALOG);
-static BBSensor g_FlowerProximitySensor5(BBSensor::ANALOG);
+static BBSensor g_FlowerSensors[] = {
+  BBSensor(BBSensor::ANALOG, A0),
+  BBSensor(BBSensor::ANALOG, A1),
+  BBSensor(BBSensor::ANALOG, 2),
+  BBSensor(BBSensor::ANALOG, 3),
+  BBSensor(BBSensor::ANALOG, 4),
+  BBSensor(BBSensor::ANALOG, 5)
+};
+
 
 // =========================== End Sensors ===========================
 

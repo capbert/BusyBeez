@@ -23,21 +23,18 @@ BBSample::BBSample(int ch, int note, String name, int delay){
 }
 
 void BBSample::triggerOn(){
-  // String str = description();
-  // Serial.print(String("triggering sample: " + str));
+  printf("trigger sample on");
+  print(_channel);
+
   _startMillis = millis();
   MIDI.sendNoteOn(_note, _velocity, _channel);
 }
 
 void BBSample::triggerOff(){
-  // bool trigger = canRetrigger();
-  
-  // if(canRetrigger()){
 
-      printf("trigger sample off");
-      print(_channel);
-      MIDI.sendNoteOn(_note, 0, _channel);
-  // }
+  printf("trigger sample off");
+  print(_channel);
+  MIDI.sendNoteOn(_note, 0, _channel);
 
 }
 

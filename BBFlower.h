@@ -8,8 +8,10 @@
 #ifndef BBFlower_h
 #define BBFlower_h 
 
+#include "Observer.h"
 
-class BBFlower {
+class BBFlower : public Observer
+{
 
 private:
   
@@ -21,8 +23,6 @@ private:
   bool _sampleTriggered;
   BBSample *p_currentSample;
   
-  void triggerSample();
-  void stopSample();
 
 public:
 
@@ -33,6 +33,10 @@ public:
 
   BBSample* getRandomSample();
 
+  // TODO: refactor names triggerOn, triggerOff
+  void triggerSample();
+
+  void stopSample();
   
 
 
@@ -50,7 +54,7 @@ public:
   // void addSensor(BBSensor sensor);
   // void removeSensor(BBSensor sensor);
   
-  void update();
+  void update(Subject *subject);
   
   void disable();
   void enable();
