@@ -29,8 +29,8 @@ static BBSample g_FlowerSamples[] = {
 };
 
 static BBSample g_AmbienceSamples[] = {
-  BBSample(15, 24, "Field", 10000),
-  BBSample(16, 25, "Bees", 10000)
+  BBSample(15, 24, "Field", 30000),
+  BBSample(16, 25, "Bees", 30000)
 };
 
 // =========================== End Samples ===========================
