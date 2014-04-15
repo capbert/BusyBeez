@@ -81,7 +81,7 @@ void BBRoom::triggerRoomAmbienceOn(){
   // trigger midi on
   printf("--- trigger room samples ON ---");
   for(int i = 0; i < _numSamples; i++){
-    p_samples[i].triggerOn(); 
+    p_samples[i].triggerOn(true); 
   }
 }
 
@@ -90,13 +90,13 @@ void BBRoom::triggerRoomAmbienceOff(){
   // bool allOff = true;
   printf("--- trigger room samples OFF ---");
   for(int i = 0; i < _numSamples; i++){
-    p_samples[i].triggerOff(); 
+    p_samples[i].triggerOff(true); 
     // allOff = g_Flowers[i].isTriggered() ? false : allOff;
   }
   // if(allOff){
   //   printf("trigger room off");    
   // }else{
-  //   printf("room has not reached timeout yet... keep playing");
+  //   printf("room has not reached timeout yet... keep playing"); 
   // }
   
   // return allOff;
