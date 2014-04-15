@@ -9,7 +9,7 @@
 #include "BBSample.h"
 #include "BBUtils.h"
 
-const int BBSample::FADE_IN_NOTE = 58;
+const int BBSample::FADE_IN_NOTE = 61;
 const int BBSample::FADE_OUT_NOTE = 60;
 
 BBSample::BBSample(){
