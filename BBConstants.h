@@ -29,8 +29,8 @@ static BBSample g_FlowerSamples[] = {
 };
 
 static BBSample g_AmbienceSamples[] = {
-  BBSample(15, 24, 30000),
-  BBSample(16, 25, 30000)
+  BBSample(15, 24),
+  BBSample(16, 25)
 };
 
 // =========================== End Samples ===========================
@@ -55,11 +55,7 @@ static BBRoom g_Room(g_AmbienceSamples, NUM_AMBIENCE_SAMPLES);
 
 static BBSensor g_FlowerSensors[] = {
   BBSensor(BBSensor::ANALOG, A0),
-  BBSensor(BBSensor::ANALOG, A1),
-  BBSensor(BBSensor::ANALOG, 2),
-  BBSensor(BBSensor::ANALOG, 3),
-  BBSensor(BBSensor::ANALOG, 4),
-  BBSensor(BBSensor::ANALOG, 5)
+  BBSensor(BBSensor::ANALOG, A1)
 };
 
 
