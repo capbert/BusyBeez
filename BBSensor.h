@@ -32,8 +32,15 @@ private:
 	int _outputRange[2];
 	
 	// averaging
-	int _avgPeriod;
-	long _runningTotal;
+	int _updateInterval;
+	
+	static const int NUMBER_OF_READINGS = 10;
+	static const int DEFAULT_UPDATE_INTERVAL = 50;
+	int _readings[NUMBER_OF_READINGS];
+	int _runningTotal;
+	int _rollingAverage;
+	int _currentIndex;
+
 	int _numReads;
 	int _lastMillis;
 

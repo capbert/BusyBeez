@@ -6,7 +6,7 @@
 
 
 
-
+// const int NUMBER_OF_READINGS = 10;
 BBSensor::BBSensor(){
 	// Empty
 	setDefaultRanges();	
@@ -14,13 +14,22 @@ BBSensor::BBSensor(){
 
 BBSensor::BBSensor(SensorType sensorType):Subject(){
 	_sensorType = sensorType;
-	_avgPeriod = 1000;
+	_updateInterval = DEFAULT_UPDATE_INTERVAL;
 	setDefaultRanges();	
 }
 
 BBSensor::BBSensor(SensorType sensorType, int pin):_pin(pin), Subject(){
 	_sensorType = sensorType;
-	_avgPeriod = 33;
+	_updateInterval = DEFAULT_UPDATE_INTERVAL;
+	// zeroReadingsArray()
+
+	_currentIndex = 0;
+	_runningTotal = 0;
+	_rollingAverage = 0;
+
+
+
+
 	setDefaultRanges();	
 }
 // BBSensor::BBSensor(int pin, SensorType sensorType){
@@ -42,6 +51,10 @@ BBSensor::BBSensor(SensorType sensorType, int pin):_pin(pin), Subject(){
 void BBSensor::begin(){
 	if (_sensorType == DIGITAL)
 		pinMode(_pin, INPUT);
+
+	for(int i=0; i<NUMBER_OF_READINGS; i++){
+		_readings[i] = 0;
+	}
 	
 }
 
@@ -75,10 +88,11 @@ int BBSensor::read() {
 	// int sensorValue = readSensor();
 	int result = -1;
 	
-	int sensorValue = _runningTotal / _numReads;
-	_runningTotal = 0;
-	_numReads = 0;
+	// int sensorValue = _runningTotal / _numReads;
+	// _runningTotal = 0;
+	// _numReads = 0;
 
+	int sensorValue = _rollingAverage;
 
 	
 	if (_sensorType == DIGITAL)
@@ -102,34 +116,35 @@ bool BBSensor::isMotionDetected(){
 
 
 void BBSensor::setAveragingPeriod(int avgMillis){
-	_avgPeriod = avgMillis;
+	_updateInterval = avgMillis;
 }
 
 void BBSensor::update(){
-	// printf("update sensor");
-	// static int _lastMillis;
-
-	// printf("---------------");
-	// printf("reading sensor: ");
-	// print((int)this);
-	// print(readSensor());
-	// printf("---------------");
-
-	_runningTotal += readSensor();
-	++ _numReads;
 	
+	// CALCULATE ROLLING AVERAGE
+
+
+
+	_runningTotal = _runningTotal - _readings[_currentIndex];
+
+	_readings[_currentIndex] = readSensor();
+
+	_runningTotal = _runningTotal + _readings[_currentIndex];
+
+	// printf("_rollingAverage");
+	// print(_runningTotal);
+	// print(_currentIndex);
+	_currentIndex++;
+	_currentIndex = _currentIndex % NUMBER_OF_READINGS;
+
+	_rollingAverage = _runningTotal / NUMBER_OF_READINGS;
+	// print(_rollingAverage);
+	// TEST UPDATE TIME
+
 	int elapsedMillis =  millis() - _lastMillis ;
 
-	// printf("lastMillis");
-	// print(_lastMillis);
-	if(elapsedMillis > _avgPeriod){
-	// 	printf("period elapsed");
-	// 	print((int)this);
-	// printf("-------------");
-
-
+	if(elapsedMillis > _updateInterval){
 		notify();
-
 		_lastMillis = millis();
 	}
 

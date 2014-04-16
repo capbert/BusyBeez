@@ -16,16 +16,22 @@ BBSample::BBSample(){
   // Empty
 }
 
-BBSample::BBSample(int ch, int note, String name, int delay){
-  _note = note;
-  _velocity = 127;
-  _channel = ch;
-  _name = name;
-  _delay = delay;
+BBSample::BBSample(int ch, int note, int delay):
+  _note(note),
+  _velocity(127),
+  _channel(ch),
+  _delay(delay)
+{
+  // _note = note;
+  // _velocity = 127;
+  // _channel = ch;
+  // // _name = name;
+  // _delay = delay;
+
 }
 
 void BBSample::triggerOn(bool fadeIn){
-  printf("trigger sample on");
+  printf("sample on");
   print(_channel);
 
   _startMillis = millis();
@@ -36,17 +42,14 @@ void BBSample::triggerOn(bool fadeIn){
 
 void BBSample::triggerOff(bool fadeOut){
 
-  printf("trigger sample off");
+  printf("sample off");
   print(_channel);
   if(fadeOut)
     MIDI.sendNoteOn(FADE_OUT_NOTE, _velocity, _channel);
   else
     MIDI.sendNoteOn(_note, 0, _channel);
 
-}
 
-String BBSample::description(){
-  return String(_name + ": ch: " + String(_channel) + " note: "+ String(_note));
 }
 
 bool BBSample::canRetrigger(){

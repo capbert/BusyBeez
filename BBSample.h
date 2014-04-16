@@ -11,16 +11,16 @@ private:
   int _note;
   int _velocity;
   int _channel;
-  String _name;
+  // String _name;
   int _delay;
   int _startMillis;
 
 public:
   BBSample();
-  BBSample(int ch, int note, String name, int delay = 5000);
-  void triggerOn(bool fadeIn = false);
-  void triggerOff(bool fadeOut = false);
-  String description();
+  BBSample(int ch, int note, int delay = 5000);
+  void triggerOn(bool fadeIn=false);
+  void triggerOff(bool fadeOut=false);
+  // String description();
   bool canRetrigger();
 
 

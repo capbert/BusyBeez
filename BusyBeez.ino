@@ -53,30 +53,31 @@ void setup(){
 
 void loop(){
   
+
   g_RoomMotionSensor.update();
 
 
   // if(g_Room.getState() == BBRoom::ROOM_STATE_ACTIVE){
-    for(int i=0; i<NUM_FLOWERS; i++){
-      g_FlowerSensors[i].update();
-    }
+  for(int i=0; i<NUM_FLOWERS; i++){
+    g_FlowerSensors[i].update();
+  }
 
   // }
 
   
   
-  // delay(10);
+  // delay(100);
 }
 
 void activateFlowers(){
-  printf("--- activate flowers ---");
+  // printf("--- activate flowers ---");
   for(int i = 0; i< NUM_FLOWERS; i++){
     g_Flowers[i].enable();
   }
 }
 
 void deactivateFlowers(){
-  printf("--- deactivate flowers ---");
+  // printf("--- deactivate flowers ---");
   for(int i = 0; i< NUM_FLOWERS; i++){
     g_Flowers[i].disable();
     // g_Flowers[i].stopSample();
@@ -85,7 +86,6 @@ void deactivateFlowers(){
 
 
 void onRoomStateChangeCallback(BBRoom::RoomState state){
-  printf("on room state update");
   if(state == BBRoom::ROOM_STATE_ACTIVE){
     activateFlowers();
   }else{
