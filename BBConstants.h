@@ -14,23 +14,43 @@ static const int NUM_AMBIENCE_SAMPLES = 2;
 
 // =========================== Samples ===========================
 static BBSample g_FlowerSamples[] = {
-  BBSample(1, 12 ),
+  BBSample(1, 13),
   BBSample(2, 13),
-  BBSample(3, 14),
-  BBSample(4, 15),
-  BBSample(5, 16),
-  BBSample(6, 17),
-  BBSample(7, 18),
-  BBSample(8, 19),
-  BBSample(9, 20),
-  BBSample(10, 21),
-  BBSample(11, 22),
-  BBSample(12, 23)
+  BBSample(3, 13),
+  BBSample(4, 13),
+  BBSample(5, 13),
+  BBSample(6, 13),
+  BBSample(7, 13),
+  BBSample(8, 13),
+  BBSample(9, 13),
+  BBSample(10, 13),
+  BBSample(11, 13),
+  BBSample(12, 13)
 };
 
+static BBSample g_FlowerSampleGroup01[] = {
+  g_FlowerSamples[0],
+  g_FlowerSamples[1],
+  g_FlowerSamples[2],
+  g_FlowerSamples[3],
+  g_FlowerSamples[4],
+  g_FlowerSamples[5],
+};
+
+static BBSample g_FlowerSampleGroup02[] = {
+  g_FlowerSamples[6],
+  g_FlowerSamples[7],
+  g_FlowerSamples[8],
+  g_FlowerSamples[9],
+  g_FlowerSamples[10],
+  g_FlowerSamples[11],
+};
+
+
+
 static BBSample g_AmbienceSamples[] = {
-  BBSample(15, 24),
-  BBSample(16, 25)
+  BBSample(15, 13),
+  BBSample(16, 13)
 };
 
 // =========================== End Samples ===========================
@@ -66,8 +86,8 @@ static BBSensor g_FlowerSensors[] = {
 // =========================== Flowers ===========================
 
 static BBFlower g_Flowers[NUM_FLOWERS] = {
-  BBFlower(g_FlowerSamples, NUM_FLOWER_SAMPLES),
-  BBFlower(g_FlowerSamples, NUM_FLOWER_SAMPLES),
+  BBFlower(g_FlowerSampleGroup01, 6, 0),
+  BBFlower(g_FlowerSampleGroup02, 6, 1),
   // BBFlower(g_flowerSamples, NUM_FLOWER_SAMPLES),
   // BBFlower(g_flowerSamples, NUM_FLOWER_SAMPLES),
   // BBFlower(g_flowerSamples, NUM_FLOWER_SAMPLES),
