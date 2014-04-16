@@ -14,18 +14,18 @@ static const int NUM_AMBIENCE_SAMPLES = 2;
 
 // =========================== Samples ===========================
 static BBSample g_FlowerSamples[] = {
-  BBSample(1, 13),
-  BBSample(2, 13),
-  BBSample(3, 13),
-  BBSample(4, 13),
-  BBSample(5, 13),
-  BBSample(6, 13),
-  BBSample(7, 13),
-  BBSample(8, 13),
-  BBSample(9, 13),
-  BBSample(10, 13),
-  BBSample(11, 13),
-  BBSample(12, 13)
+  BBSample(1, 12),
+  BBSample(2, 12),
+  BBSample(3, 12),
+  BBSample(4, 12),
+  BBSample(5, 12),
+  BBSample(6, 12),
+  BBSample(7, 12),
+  BBSample(8, 12),
+  BBSample(9, 12),
+  BBSample(10, 12),
+  BBSample(11, 12),
+  BBSample(12, 12)
 };
 
 static BBSample g_FlowerSampleGroup01[] = {
@@ -49,8 +49,8 @@ static BBSample g_FlowerSampleGroup02[] = {
 
 
 static BBSample g_AmbienceSamples[] = {
-  BBSample(15, 13),
-  BBSample(16, 13)
+  BBSample(15, 12),
+  BBSample(16, 12)
 };
 
 // =========================== End Samples ===========================
