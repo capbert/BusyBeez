@@ -29,10 +29,13 @@ public:
   void setStateChangeCallback(RoomUpdateCallback);
 
 private:
+  static const int MIN_PLAYBACK_TIME = 30000;
   RoomState _state;
   BBSample *p_samples;
   int _numSamples;
   RoomUpdateCallback _stateChangeCallback;
+  long _activatedTime;
+  long getElapsedTime();
   void deactivateRoom();
   void activateRoom();
   void triggerRoomAmbienceOn();

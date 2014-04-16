@@ -8,7 +8,7 @@ BBRoom::BBRoom():Observer(){
 }
 BBRoom::BBRoom(BBSample *samples, int numSamples):p_samples(samples), _numSamples(numSamples), Observer(){
   setState(ROOM_STATE_INACTIVE);
-
+  _activatedTime = 0;
 }
 
 BBRoom::RoomState BBRoom::getState(){
@@ -33,11 +33,15 @@ void BBRoom::update(Subject *subject){
   if (_state == ROOM_STATE_ACTIVE){
     // sensor is off and room is active so turn it off
     if (sensorValue == -1){
-      // Serial.println(F("room is active and sensor is off"));
+
+    // only allow room to deactivate after min time... 
+    if( getElapsedTime() < MIN_PLAYBACK_TIME ) return;
+
       deactivateRoom();
     }
   }else if (_state == ROOM_STATE_INACTIVE){
     // sensor is on and room is inactive
+
     if(sensorValue == 1)
       activateRoom();
   }
@@ -54,7 +58,9 @@ void BBRoom::setStateChangeCallback(RoomUpdateCallback cb){
 
 
 
-
+long BBRoom::getElapsedTime(){
+  return millis() - _activatedTime;
+}
 
 
 
@@ -71,6 +77,7 @@ void BBRoom::deactivateRoom(){
 void BBRoom::activateRoom(){
   
   printf("--- activate room ---");
+  _activatedTime = millis();
   setState(ROOM_STATE_ACTIVE);
   triggerRoomAmbienceOn();
   // activateFlowers();

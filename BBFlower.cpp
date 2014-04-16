@@ -56,7 +56,7 @@ void BBFlower::triggerSample(){
 
   // printf("BBFlower::trigger sample");
   _sampleTriggered = true;
-
+  _activatedTime = millis();
   p_currentSample = getRandomSample(); 
   p_currentSample->triggerOn();
 
@@ -65,7 +65,7 @@ void BBFlower::triggerSample(){
 void BBFlower::stopSample(){
   if(!_sampleTriggered) return; // don't do anything if nothing is triggered
 
-  if(p_currentSample->canRetrigger()){
+  if(getElapsedTime() > MIN_PLAYBACK_DURATION){
     // printf("BBFlower::stop sample");
     p_currentSample->triggerOff();
     // p_currentSample = NULL;
@@ -84,6 +84,11 @@ void BBFlower::update(Subject *subject){
 
     (sensorValue == -1) ? stopSample() : triggerSample();
 
+}
+
+
+long BBFlower::getElapsedTime(){
+  return millis() - _activatedTime;
 }
 
 

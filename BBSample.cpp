@@ -9,25 +9,16 @@
 #include "BBSample.h"
 #include "BBUtils.h"
 
-const int BBSample::FADE_IN_NOTE = 61;
-const int BBSample::FADE_OUT_NOTE = 60;
-
 BBSample::BBSample(){
   // Empty
 }
 
-BBSample::BBSample(int ch, int note, int delay):
+BBSample::BBSample(int ch, int note):
   _note(note),
   _velocity(127),
-  _channel(ch),
-  _delay(delay)
+  _channel(ch)
 {
-  // _note = note;
-  // _velocity = 127;
-  // _channel = ch;
-  // // _name = name;
-  // _delay = delay;
-
+  // Empty
 }
 
 void BBSample::triggerOn(bool fadeIn){
@@ -49,21 +40,5 @@ void BBSample::triggerOff(bool fadeOut){
   else
     MIDI.sendNoteOn(_note, 0, _channel);
 
-
-}
-
-bool BBSample::canRetrigger(){
-  
-  static int lastMillis;
-  
-  int mils = millis();
-  int elapsedMillis =  mils - _startMillis;
-
-  if ( elapsedMillis > _delay ){
-    _startMillis = mils;
-    return true;
-  } 
-
-  return false;
 
 }

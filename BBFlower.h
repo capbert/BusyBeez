@@ -19,7 +19,7 @@ public:
 
   BBFlower();
   // BBFlower(BBSensor *);
-  BBFlower(BBSample *, int);
+  BBFlower(BBSample *, int numSamples);
   // BBFlower(BBSensor *, BBSample *);
 
   BBSample* getRandomSample();
@@ -42,7 +42,7 @@ public:
 
 
 private:
-  
+  static const int MIN_PLAYBACK_DURATION = 5000;
   BBSensor *p_sensor;
   BBSample *p_samples; 
 
@@ -50,6 +50,8 @@ private:
   bool _enabled;
   bool _sampleTriggered;
   BBSample *p_currentSample;
+  long _activatedTime;
+  long getElapsedTime();
 };
 
 #endif
