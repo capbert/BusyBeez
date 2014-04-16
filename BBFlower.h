@@ -19,7 +19,7 @@ public:
 
   BBFlower();
   // BBFlower(BBSensor *);
-  BBFlower(BBSample *, int numSamples);
+  BBFlower(BBSample *, int numSamples, int speakerID);
   // BBFlower(BBSensor *, BBSample *);
 
   BBSample* getRandomSample();
@@ -50,7 +50,11 @@ private:
   bool _enabled;
   bool _sampleTriggered;
   BBSample *p_currentSample;
+  
+  int _speakerOutputID;
+
   long _activatedTime;
+
   long getElapsedTime();
 };
 

@@ -11,9 +11,14 @@ BBFlower::BBFlower():Observer(){
   enable();
 }
 
-BBFlower::BBFlower(BBSample *samples, int numSamples):Observer(){
-  p_samples = samples;
-  _numSamples = numSamples;
+BBFlower::BBFlower(BBSample *samples, int numSamples, int speakerID):
+  p_samples(samples),
+  _numSamples(numSamples),
+  _speakerOutputID(speakerID),
+  Observer()
+  {
+  // p_samples = samples;
+  // _numSamples = numSamples;
   enable();
 }
 
@@ -58,6 +63,7 @@ void BBFlower::triggerSample(){
   _sampleTriggered = true;
   _activatedTime = millis();
   p_currentSample = getRandomSample(); 
+  p_currentSample->assignToOutput(_speakerOutputID);
   p_currentSample->triggerOn();
 
 }

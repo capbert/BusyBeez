@@ -1,10 +1,6 @@
 #include <Arduino.h>
 #include <MIDI.h>
-// #include <midi_Defs.h>
-// #include <midi_Namespace.h>
-// #include <midi_Settings.h>
-
-#include "SimpleTimer.h"
+#include <assert.h>
 
 #include "BBSample.h"
 #include "BBUtils.h"
@@ -15,11 +11,32 @@ BBSample::BBSample(){
 
 BBSample::BBSample(int ch, int note):
   _note(note),
-  _velocity(127),
   _channel(ch)
 {
   // Empty
 }
+
+
+
+// void BBSample::setVolume(int volume){
+//   assert(volume >= 0 && volume < 128); // valid MIDI values
+//   int volNote = _output + VOLUME_CONTROL_NOTE_OFFSET;
+//   MIDI.sendControlChange( volNote, volume, _channel);
+// }
+
+void BBSample::assignToOutput(int output){
+  assert(output >= 0 && output<NUMBER_OF_PLAYBACK_OUTPUTS);
+  printf("set output:");
+  print(output);
+  _output = output;
+
+  for (int i = 0; i < NUMBER_OF_PLAYBACK_OUTPUTS; ++i)
+  {
+    int outNote = i+VOLUME_CONTROL_NOTE_OFFSET;
+    (i==output) ? MIDI.sendControlChange(outNote, 127, _channel) : MIDI.sendControlChange(outNote, 0, _channel);
+  }
+}
+
 
 void BBSample::triggerOn(bool fadeIn){
   printf("sample on");
@@ -27,8 +44,8 @@ void BBSample::triggerOn(bool fadeIn){
 
   _startMillis = millis();
   if(fadeIn)
-    MIDI.sendNoteOn(FADE_IN_NOTE, _velocity, _channel);
-  MIDI.sendNoteOn(_note, _velocity, _channel);
+    MIDI.sendNoteOn(FADE_IN_NOTE, 127, _channel);
+  MIDI.sendNoteOn(_note, 127, _channel);
 }
 
 void BBSample::triggerOff(bool fadeOut){
@@ -36,7 +53,7 @@ void BBSample::triggerOff(bool fadeOut){
   printf("sample off");
   print(_channel);
   if(fadeOut)
-    MIDI.sendNoteOn(FADE_OUT_NOTE, _velocity, _channel);
+    MIDI.sendNoteOn(FADE_OUT_NOTE, 127, _channel);
   else
     MIDI.sendNoteOn(_note, 0, _channel);
 
