@@ -1,24 +1,28 @@
 #include <Arduino.h>
 #include "BBSensor.h"
-#include "Subject.h"
+#include "ISubject.h"
 #include "BBUtils.h"
 
 
 
 
-// const int NUMBER_OF_READINGS = 10;
-BBSensor::BBSensor(){
-	// Empty
-	setDefaultRanges();	
-}
 
-BBSensor::BBSensor(SensorType sensorType):Subject(){
-	_sensorType = sensorType;
-	_updateInterval = DEFAULT_UPDATE_INTERVAL;
-	setDefaultRanges();	
-}
+// BBSensor::BBSensor(){
+// 	// Empty
+// 	setDefaultRanges();	
+// }
 
-BBSensor::BBSensor(SensorType sensorType, int pin):_pin(pin), Subject(){
+// BBSensor::BBSensor(SensorType sensorType){
+// 	_sensorType = sensorType;
+// 	_updateInterval = DEFAULT_UPDATE_INTERVAL;
+// 	setDefaultRanges();	
+// 	setSmoothingFactor();
+// }
+
+BBSensor::BBSensor(SensorType sensorType, int pin, bool invert):
+	_pin(pin), 
+	_invertOutput(invert)
+{
 	_sensorType = sensorType;
 	_updateInterval = DEFAULT_UPDATE_INTERVAL;
 	// zeroReadingsArray()
@@ -31,6 +35,7 @@ BBSensor::BBSensor(SensorType sensorType, int pin):_pin(pin), Subject(){
 
 
 	setDefaultRanges();	
+	setSmoothingFactor();
 }
 // BBSensor::BBSensor(int pin, SensorType sensorType){
 	
@@ -52,7 +57,7 @@ void BBSensor::begin(){
 	if (_sensorType == DIGITAL)
 		pinMode(_pin, INPUT);
 
-	for(int i=0; i<NUMBER_OF_READINGS; i++){
+	for(int i=0; i<_smoothingFactor; i++){
 		_readings[i] = 0;
 	}
 	
@@ -82,28 +87,23 @@ void BBSensor::setOutputRange(int low, int high){
 	_outputRange[1] = high;
 }
 
-
+void BBSensor::setSmoothingFactor(int smoothing){
+	_smoothingFactor = smoothing;
+}
 // get scaled value from sensor
 int BBSensor::read() {
-	// int sensorValue = readSensor();
+
 	int result = -1;
-	
-	// int sensorValue = _runningTotal / _numReads;
-	// _runningTotal = 0;
-	// _numReads = 0;
-
 	int sensorValue = _rollingAverage;
-
 	
 	if (_sensorType == DIGITAL)
 		return ( sensorValue == 0) ? result : 1; // 0 means off in digital sensor world
 	
-
 	if (sensorValue >= _inputRange[0] && sensorValue <= _inputRange[1]){
 		result = scaleSensorValue(sensorValue);
+		if (_invertOutput)
+			result = abs(result - _outputRange[1]);
 	}
-
-
 
 	return result;
 }
@@ -132,12 +132,13 @@ void BBSensor::update(){
 	_runningTotal = _runningTotal + _readings[_currentIndex];
 
 	// printf("_rollingAverage");
+	// print(_readings[_currentIndex]);
 	// print(_runningTotal);
 	// print(_currentIndex);
 	_currentIndex++;
-	_currentIndex = _currentIndex % NUMBER_OF_READINGS;
+	_currentIndex = _currentIndex % _smoothingFactor;
 
-	_rollingAverage = _runningTotal / NUMBER_OF_READINGS;
+	_rollingAverage = _runningTotal / _smoothingFactor;
 	// print(_rollingAverage);
 	// TEST UPDATE TIME
 
@@ -156,7 +157,7 @@ void BBSensor::update(){
 // **********************************************************
 
 void BBSensor::setDefaultRanges(){
-	setInputRange(200,550);
+	setInputRange(100,550);
 	setOutputRange(0,127);
 	// _inputRange[0] = 200;
 	// _inputRange[1] = 550;

@@ -45,7 +45,7 @@ void setup(){
   configureRoom();
   configureFlowers();
   
-
+  deactivateFlowers();
 
 }
 
@@ -66,7 +66,7 @@ void loop(){
 
   
   
-  // delay(100);
+  delay(1);
 }
 
 void activateFlowers(){
@@ -106,8 +106,13 @@ void configureRoom(){
 }
 
 void configureFlowers(){
+  // TODO: need to figure out a way to configure these in a more meaningful way.
+
   for(int i=0; i<NUM_FLOWERS; i++){
     BBSensor *sensor = &g_FlowerSensors[i];
+
+    if (i==4) sensor->setInputRange(20,144); // FIXME: config the lone ultrasonic sensor
+
     sensor->attach(&g_Flowers[i]);
     sensor->begin();
   }

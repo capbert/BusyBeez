@@ -1,10 +1,12 @@
 #ifndef BB_ROOM_H
 #define BB_ROOM_H
 
-#include "Observer.h"
+#include "IObserver.h"
+#include "ITimeout.h"
+
 class BBSample;
 
-class BBRoom : public Observer
+class BBRoom : public IObserver, public ITimeout
 {
 public:
   
@@ -19,27 +21,31 @@ public:
   typedef void (*RoomUpdateCallback)(RoomState);
 
 
-  BBRoom();
+  // BBRoom();
   BBRoom(BBSample *samples, int numSamples);
   // ~BBRoom();
   RoomState getState();
   void setState(RoomState);
-  void update(Subject *subject);
+  void update(ISubject *subject);
 
   void setStateChangeCallback(RoomUpdateCallback);
 
 private:
-  static const int MIN_PLAYBACK_TIME = 30000;
+  static const int DEFAULT_TIMEOUT = 30000;
   RoomState _state;
   BBSample *p_samples;
   int _numSamples;
   RoomUpdateCallback _stateChangeCallback;
-  long _activatedTime;
-  long getElapsedTime();
+
+  // long _activatedTime;
+  // long getElapsedTime();
+
   void deactivateRoom();
   void activateRoom();
   void triggerRoomAmbienceOn();
   void triggerRoomAmbienceOff();
+
+  void handleTimeout();
 
 };
 
