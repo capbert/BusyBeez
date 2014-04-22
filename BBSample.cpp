@@ -39,8 +39,8 @@ void BBSample::assignToOutput(int output){
 
 
 void BBSample::triggerOn(bool fadeIn){
-  printf("sample on");
-  print(_channel);
+  // printf("sample on");
+  // print(_channel);
 
   _startMillis = millis();
   if(fadeIn)
@@ -50,8 +50,8 @@ void BBSample::triggerOn(bool fadeIn){
 
 void BBSample::triggerOff(bool fadeOut){
 
-  printf("sample off");
-  print(_channel);
+  // printf("sample off");
+  // print(_channel);
   if(fadeOut)
     MIDI.sendNoteOn(FADE_OUT_NOTE, 127, _channel);
   else
