@@ -7,50 +7,57 @@
 
 // =========================== Constants ===========================
 static const int NUM_FLOWER_SAMPLES = 7;
-static const int NUM_FLOWERS = 2;
-static const int NUM_AMBIENCE_SAMPLES = 2;
+static const int NUM_FLOWERS = 5;
+static const int NUM_AMBIENCE_SAMPLES = 1;
 
 
 
 // =========================== Samples ===========================
 static BBSample g_FlowerSamples[] = {
-  BBSample(1, 12),
-  BBSample(2, 12),
-  BBSample(3, 12),
-  BBSample(4, 12),
-  BBSample(5, 12),
-  BBSample(6, 12),
-  BBSample(7, 12),
-  BBSample(8, 12),
-  BBSample(9, 12),
-  BBSample(10, 12),
-  BBSample(11, 12),
-  BBSample(12, 12)
+  BBSample(1, 0),
+  BBSample(2, 0),
+  BBSample(3, 0),
+  BBSample(4, 0),
+  BBSample(5, 0),
+  BBSample(6, 0),
+  BBSample(7, 0),
+  BBSample(8, 0),
+  BBSample(9, 0),
+  BBSample(10, 0),
+  BBSample(11, 0),
+  BBSample(12, 0)
 };
 
 static BBSample g_FlowerSampleGroup01[] = {
   g_FlowerSamples[0],
   g_FlowerSamples[1],
+};
+
+static BBSample g_FlowerSampleGroup02[] = {
   g_FlowerSamples[2],
   g_FlowerSamples[3],
+};
+
+static BBSample g_FlowerSampleGroup03[] = {
   g_FlowerSamples[4],
   g_FlowerSamples[5],
 };
 
-static BBSample g_FlowerSampleGroup02[] = {
+static BBSample g_FlowerSampleGroup04[] = {
   g_FlowerSamples[6],
   g_FlowerSamples[7],
   g_FlowerSamples[8],
+};
+
+static BBSample g_FlowerSampleGroup05[] = {
   g_FlowerSamples[9],
   g_FlowerSamples[10],
   g_FlowerSamples[11],
 };
 
 
-
 static BBSample g_AmbienceSamples[] = {
-  BBSample(15, 12),
-  BBSample(16, 12)
+  BBSample(16, 0),
 };
 
 // =========================== End Samples ===========================
@@ -65,17 +72,13 @@ static BBSensor g_RoomMotionSensor(BBSensor::DIGITAL, 2);
 
 static BBRoom g_Room(g_AmbienceSamples, NUM_AMBIENCE_SAMPLES);
 
-// static BBSensor g_FlowerProximitySensor0(BBSensor::ANALOG, 0);
-// static BBSensor g_FlowerProximitySensor1(BBSensor::ANALOG, 1);
-// static BBSensor g_FlowerProximitySensor2(BBSensor::ANALOG, 2);
-// static BBSensor g_FlowerProximitySensor3(BBSensor::ANALOG, 3);
-// static BBSensor g_FlowerProximitySensor4(BBSensor::ANALOG, 4);
-// static BBSensor g_FlowerProximitySensor5(BBSensor::ANALOG, 5);
-
 
 static BBSensor g_FlowerSensors[] = {
   BBSensor(BBSensor::ANALOG, A0),
-  BBSensor(BBSensor::ANALOG, A1)
+  BBSensor(BBSensor::ANALOG, A1),
+  BBSensor(BBSensor::ANALOG, A2),
+  BBSensor(BBSensor::ANALOG, A3),
+  BBSensor(BBSensor::ANALOG, A4, true),
 };
 
 
@@ -85,14 +88,20 @@ static BBSensor g_FlowerSensors[] = {
 
 // =========================== Flowers ===========================
 
+// static BBFlower g_Flowers[NUM_FLOWERS] = {
+//   BBFlower(g_FlowerSampleGroup01, 4, 0),
+//   BBFlower(g_FlowerSampleGroup02, 4, 1),
+//   BBFlower(g_FlowerSampleGroup03, 4, 2),
+//   };
+
 static BBFlower g_Flowers[NUM_FLOWERS] = {
-  BBFlower(g_FlowerSampleGroup01, 6, 0),
-  BBFlower(g_FlowerSampleGroup02, 6, 1),
-  // BBFlower(g_flowerSamples, NUM_FLOWER_SAMPLES),
-  // BBFlower(g_flowerSamples, NUM_FLOWER_SAMPLES),
-  // BBFlower(g_flowerSamples, NUM_FLOWER_SAMPLES),
-  // BBFlower(g_flowerSamples, NUM_FLOWER_SAMPLES)
+  BBFlower(g_FlowerSampleGroup01, 2, 0),
+  BBFlower(g_FlowerSampleGroup02, 2, 1),
+  BBFlower(g_FlowerSampleGroup03, 2, 2),
+  BBFlower(g_FlowerSampleGroup04, 3, 3),
+  BBFlower(g_FlowerSampleGroup05, 3, 4),
   };
+
 
 // =========================== End Flowers ===========================
 

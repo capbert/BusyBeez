@@ -20,3 +20,4 @@
 *.out
 *.app
 stino.settings
+.DS_Store
