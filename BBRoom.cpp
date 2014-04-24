@@ -4,13 +4,8 @@
 #include "BBSensor.h"
 #include "BBUtils.h"
 #include "BBSample.h"
-// #include "IObserver.h"
 
 
-
-// BBRoom::BBRoom(){
-//   setState(ROOM_STATE_INACTIVE);
-// }
 BBRoom::BBRoom(BBSample *samples, int numSamples):
   p_samples(samples), 
   _numSamples(numSamples)
@@ -110,5 +105,10 @@ void BBRoom::triggerRoomAmbienceOn(){
 void BBRoom::triggerRoomAmbienceOff(){
 
   printf("--- trigger room samples OFF ---");
+  // for(int i = 0; i < _numSamples; i++){
+  //   p_samples[i].triggerOff(true); 
   // }
+
+  MIDI.sendNoteOn(59, 127, 1); // TODO: trigger 'global' fadeOut
+
 }

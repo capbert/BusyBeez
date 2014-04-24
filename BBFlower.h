@@ -13,6 +13,7 @@
 #include "ITimeout.h"
 
 
+// class BBFlower 
 class BBFlower : public IObserver, public ITimeout
 {
 
@@ -20,69 +21,56 @@ class BBFlower : public IObserver, public ITimeout
 
 public:
   
-  enum FlowerState{
+  typedef enum{
     FLOWER_STATE_ACTIVE,
     FLOWER_STATE_INACTIVE,
     FLOWER_STATE_DISABLED
-  };
+  } FlowerState;
 
 
   // BBFlower();
   // BBFlower(BBSensor *);
   BBFlower(BBSample *, int numSamples, int speakerID);
-  // BBFlower(BBSensor *, BBSample *);
+  // // BBFlower(BBSensor *, BBSample *);
 
-  BBSample* getRandomSample();
 
-  // TODO: refactor names triggerOn, triggerOff
+
+
+  // // TODO: refactor names triggerOn, triggerOff
   void triggerSample();
-
   void stopSample();
 
-  void setSamples(BBSample *, int numSamples);
+  // // void setSamples(BBSample *, int numSamples);
 
   void setSensor(BBSensor *);
   void update(ISubject *subject);
   
   void disable();
   void enable();
+
+
+  FlowerState getState();
   void setState(FlowerState);
-
-
-
-  // void setTimeout(int=5000);
-  
 
 private:
   static const int DEFAULT_TIMEOUT = 5000;
 
 
+  FlowerState _state;
 
   BBSensor *p_sensor;
-  BBSample *p_samples; 
 
   int _numSamples;
-  // bool _enabled;
-  // bool _sampleTriggered;
+  BBSample *p_samples; 
   BBSample *p_currentSample;
-  
+
   int _speakerOutputID;
 
-  // long _activatedTime;
-  FlowerState _state;
   
-  FlowerState getState();
+  BBSample* getRandomSample();
   
-
-  
-  // int _timeout;
-  // unsigned long _timeoutStart;
-  // long getElapsedTime();
-  // bool timeoutHasExpired();
-  // void updateTimeout();
   void handleTimeout();
-  // void resetTimeout();
-  // void startTimeout();
+
 };
 
 #endif

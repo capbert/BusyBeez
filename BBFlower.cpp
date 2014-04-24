@@ -9,7 +9,7 @@
 
 
 // BBFlower::BBFlower(){
-//   enable();
+//   // enable();
 // }
 
 BBFlower::BBFlower(BBSample *samples, int numSamples, int speakerID):
@@ -38,11 +38,10 @@ BBSample* BBFlower::getRandomSample(){
 }
 
 void BBFlower::disable(){
-  resetTimeout();
-  if(getState()== FLOWER_STATE_ACTIVE) // TODO: is this wrong? is something actually playing?s
-    stopSample();  
+  // resetTimeout();
+  if(getState()== FLOWER_STATE_ACTIVE) stopSample(); // TODO: is this wrong? is something actually playing?s
+    
   setState(FLOWER_STATE_DISABLED);
-  // _enabled = false;
 }
 
 void BBFlower::enable(){
@@ -54,7 +53,6 @@ void BBFlower::triggerSample(){
   if (getState() == FLOWER_STATE_ACTIVE) return; // don't trigger if already triggered
 
   printf("BBFlower::trigger sample");
-  // _sampleTriggered = true;
 
   p_currentSample = getRandomSample(); 
   p_currentSample->assignToOutput(_speakerOutputID);
@@ -65,26 +63,23 @@ void BBFlower::triggerSample(){
 void BBFlower::stopSample(){
   if(getState() == FLOWER_STATE_INACTIVE) return; // don't do anything if nothing is triggered
 
-  // if(getElapsedTime() > MAX_INACTIVITY_DURATION){
-    printf("BBFlower::stop sample");
-    p_currentSample->triggerOff();
-    // p_currentSample = NULL;
-    // _sampleTriggered = false;
-  // }
+  printf("BBFlower::stop sample");
+  p_currentSample->triggerOff();
+
 }
 
 void BBFlower::update(ISubject *subject){
     // printf("--------updateing BBFlower--------");
 
     int sensorValue = ((BBSensor*)subject)->read();
-    
+    // print(sensorValue);
     FlowerState state = getState();
 
     if ( state == FLOWER_STATE_ACTIVE ){
 
       if (sensorValue < 0){
       
-        updateTimeout();
+        // updateTimeout();
           
      }else{
       // TODO: do something with the sensor value??
@@ -100,9 +95,6 @@ void BBFlower::update(ISubject *subject){
     }
 
 
-
-    // (sensorValue == -1) ? stopSample() : triggerSample();
-
 }
 
 void BBFlower::handleTimeout(){
@@ -111,55 +103,10 @@ void BBFlower::handleTimeout(){
   setState(FLOWER_STATE_INACTIVE);
 }
 
-// void BBFlower::updateTimeout(){
-
-//   if(timeoutHasExpired()){
-//     printf("---- timeout has expired ----");
-//     handleTimeout();
-
-//   } else {
-
-//     startTimeout();
-
-//   }
-
-// }
-
-// void BBFlower::setTimeout(int timeout){
-//   _timeout = timeout;
-// }
-
-// bool BBFlower::timeoutHasExpired(){
-//   // printf("TIME: ");
-//   // print(_timeoutStart);
-//   return ( getElapsedTime() > _timeout ) ? true : false;
-// }
-
-// void BBFlower::startTimeout(){
-
-//   if(_timeoutStart == 0){
-//     _timeoutStart = millis();
-//   }
-
-// }
-
-// void BBFlower::resetTimeout(){
-//   // 0 = "off" in this case. This may be a poor asumption.
-//   _timeoutStart = 0;
-// }
-
-// long BBFlower::getElapsedTime(){
-//   if (_timeoutStart > 0){
-//     return millis() - _timeoutStart;
-//   }else{
-//     return 0;
-//   }
-// }
-
 
 void BBFlower::setState(BBFlower::FlowerState state){
   if (state == _state) return;
-  printf("----- SET FLOWER STATE -----");
+  // printf("----- SET FLOWER STATE -----");
   print(state);
   _state = state;
 }

@@ -3,6 +3,7 @@
 
 #include "ISubject.h"
 
+// class BBSensor
 class BBSensor : public ISubject
 {
 public:
