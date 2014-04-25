@@ -29,10 +29,6 @@ void BBRoom::setState(BBRoom::RoomState state){
 
 void BBRoom::update(ISubject *subject){
   int sensorValue = ((BBSensor *)subject)->read();
-  // printf("BBRoom sensor val: ");
-  // print(sensorValue);
-
-
 
   if (_state == ROOM_STATE_ACTIVE){
     // sensor is off and room is active so turn it off
@@ -66,30 +62,18 @@ void BBRoom::setStateChangeCallback(RoomUpdateCallback cb){
 // *********************************************************************************
 
 
-
-// long BBRoom::getElapsedTime(){
-//   return millis() - _activatedTime;
-// }
-
-
-
 void BBRoom::deactivateRoom(){
-  // if (!noFlowerSamplesPlaying) return; // don't deactivate if flowers are playing
   printf("--- deactiveate room ---");
-  // deactivateFlowers();
+    resetTimeout();
     setState(ROOM_STATE_INACTIVE);
     triggerRoomAmbienceOff();
-
-  // }
 }
 
 void BBRoom::activateRoom(){
   
   printf("--- activate room ---");
-  // _activatedTime = millis();
   setState(ROOM_STATE_ACTIVE);
   triggerRoomAmbienceOn();
-  // activateFlowers();
 
 }
 
@@ -98,8 +82,9 @@ void BBRoom::triggerRoomAmbienceOn(){
   // trigger midi on
   printf("--- trigger room samples ON ---");
   for(int i = 0; i < _numSamples; i++){
-    p_samples[i].triggerOn(true); 
+    p_samples[i].triggerOn(false); 
   }
+  MIDI.sendNoteOn(59, 127, 1); // TODO: trigger 'global' fadeOut
 }
 
 void BBRoom::triggerRoomAmbienceOff(){
@@ -109,6 +94,6 @@ void BBRoom::triggerRoomAmbienceOff(){
   //   p_samples[i].triggerOff(true); 
   // }
 
-  MIDI.sendNoteOn(59, 127, 1); // TODO: trigger 'global' fadeOut
+  MIDI.sendNoteOn(58, 127, 1); // TODO: trigger 'global' fadeOut
 
 }

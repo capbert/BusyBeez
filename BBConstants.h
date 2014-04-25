@@ -98,10 +98,10 @@ static BBSensor g_FlowerSensors[NUM_FLOWERS] = {
 
 static BBFlower g_Flowers[NUM_FLOWERS] = {
   BBFlower(g_FlowerSampleGroup01, 2, 1),
-  BBFlower(g_FlowerSampleGroup02, 2, 1),
-  BBFlower(g_FlowerSampleGroup03, 2, 1),
-  BBFlower(g_FlowerSampleGroup04, 2, 1),
-  BBFlower(g_FlowerSampleGroup05, 2, 1),
+  BBFlower(g_FlowerSampleGroup02, 2, 2),
+  BBFlower(g_FlowerSampleGroup03, 2, 3),
+  BBFlower(g_FlowerSampleGroup04, 2, 4),
+  BBFlower(g_FlowerSampleGroup05, 2, 5),
   // BBFlower(g_FlowerSampleGroup06, 2, 1),
   };
 
