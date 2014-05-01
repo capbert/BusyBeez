@@ -7,7 +7,7 @@
 #define BBFlower_h 
 
 
-#include "BBSample.h"
+// #include "BBSample.h"
 #include "BBSensor.h"
 #include "IObserver.h"
 #include "ITimeout.h"
@@ -28,10 +28,8 @@ public:
   } FlowerState;
 
 
-  // BBFlower();
-  // BBFlower(BBSensor *);
-  BBFlower(BBSample *, int numSamples, int speakerID);
-  // // BBFlower(BBSensor *, BBSample *);
+  // BBFlower(BBSample *, int numSamples, int speakerID);
+  BBFlower(int id, int numSamples);
 
 
 
@@ -42,12 +40,13 @@ public:
 
   // // void setSamples(BBSample *, int numSamples);
 
-  void setSensor(BBSensor *);
   void update(ISubject *subject);
   
   void disable();
   void enable();
 
+  int getID();
+  void setID(int);
 
   FlowerState getState();
   void setState(FlowerState);
@@ -58,16 +57,18 @@ private:
 
   FlowerState _state;
 
-  BBSensor *p_sensor;
+  // BBSensor *p_sensor;
 
   int _numSamples;
-  BBSample *p_samples; 
-  BBSample *p_currentSample;
+  int _id;
+  int _currentNote;
+  // BBSample *p_samples; 
+  // BBSample *p_currentSample;
 
-  int _speakerOutputID;
+  // int _speakerOutputID;
 
   
-  BBSample* getRandomSample();
+  // BBSample* getRandomSample();
   
   void handleTimeout();
 

@@ -2,14 +2,23 @@
 
 // #include "SimpleTimer.h"
 
-#include "BBSample.h"
+// #include "BBSample.h"
 #include "BBSensor.h"
 #include "BBFlower.h"
 
 #include "BBConstants.h"
 #include "BBUtils.h"
 
-// #include "MemoryFree.h"
+#ifdef DEBUG
+
+#include "MemoryFree.h"
+
+#endif
+
+
+
+// TODO: abstract MIDI calls aka ableton harnass?
+// TODO: configure sensors and flowers using config struct objs
 
 
 void setup(){
@@ -18,51 +27,50 @@ void setup(){
   Serial.begin(115200);
 
   
-  // printf("start");
-  // print(freeMemory());
+  LOGS("------ start ------");
+
+  LOG(freeMemory());
+
 
   configureRoom();
   configureFlowers();
-  
+
   deactivateFlowers();
+  // activateFlowers();
 }
 
 
 
 void loop(){
   
-  // printf("loop - "); 
-  // print(freeMemory());
-  
-  g_RoomMotionSensor.update();
+  BBSensor::syncronize(RX_PIN, 50,50);
+
+  for(int i=0; i<NUM_ROOM_SENSORS; i++){
+    g_RoomSensors[i]->update();
+  }
 
   for(int i=0; i<NUM_FLOWERS; i++){
-    g_FlowerSensors[i].update();
+    g_FlowerSensors[i]->update();
   }
-  
-  delay(1);
+
 }
-
-
-
-
-
 
 
 
 
 void activateFlowers(){
-  // printf("--- activate flowers ---");
+  // LOGS("--- activate flowers ---");
   for(int i = 0; i< NUM_FLOWERS; i++){
-    g_Flowers[i].enable();
+    g_Flowers[i]->enable();
+    g_FlowerSensors[i]->attach(&g_Room);
   }
 }
 
 void deactivateFlowers(){
-  // printf("--- deactivate flowers ---");
+  // LOGS("--- deactivate flowers ---");
   for(int i = 0; i< NUM_FLOWERS; i++){
-    g_Flowers[i].disable();
-    // g_Flowers[i].stopSample();
+    g_Flowers[i]->disable();
+    g_FlowerSensors[i]->detatch(&g_Room);
   }
 }
 
@@ -77,11 +85,12 @@ void onRoomStateChangeCallback(BBRoom::RoomState state){
 
 void configureRoom(){
 
-  g_RoomMotionSensor.setInputRange(0,1);
-  g_RoomMotionSensor.setOutputRange(0,1);
-
-  g_RoomMotionSensor.attach(&g_Room);
-  g_RoomMotionSensor.begin();
+  for(int i=0; i<NUM_ROOM_SENSORS; i++){
+    LOGS("config room");
+      BBSensor *sensor = g_RoomSensors[i];
+      sensor->attach(&g_Room);
+      sensor->begin();
+  }
 
   g_Room.setStateChangeCallback(onRoomStateChangeCallback);
   g_Room.setState(BBRoom::ROOM_STATE_INACTIVE);
@@ -89,12 +98,11 @@ void configureRoom(){
 
 void configureFlowers(){
   // TODO: need to figure out a way to configure these in a more meaningful way.
-
   for(int i=0; i<NUM_FLOWERS; i++){
-    BBSensor *sensor = &g_FlowerSensors[i];
-    if (i==4) sensor->setInputRange(20,144); // TODO: FIXME: config the lone ultrasonic 
-
-    sensor->attach(&g_Flowers[i]);
+    LOGS("config flowers");
+    EZSensor *sensor = g_FlowerSensors[i];
+    // sensor->setInputRange(20,144); // TODO: FIXME: config the lone ultrasonic 
+    sensor->attach(g_Flowers[i]);
     sensor->begin();
   }
 }

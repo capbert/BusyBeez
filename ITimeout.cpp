@@ -4,7 +4,7 @@
 void ITimeout::updateTimeout(){
 
   if(timeoutHasExpired()){
-    printf("---- timeout has expired ----");
+    LOGS("---- timeout has expired ----");
     handleTimeout();
 
   } else {
@@ -20,8 +20,8 @@ void ITimeout::setTimeout(int timeout){
 }
 
 bool ITimeout::timeoutHasExpired(){
-  // printf("TIME: ");
-  // print(_timeoutStart);
+  // LOGS("TIME: ");
+  // LOG(_timeoutStart);
   return ( getElapsedTime() > _timeout ) ? true : false;
 }
 

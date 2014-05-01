@@ -9,23 +9,28 @@
 #include "BBUtils.h"
 
 void ISubject::notify(){
-  // printf("notify observers: ");
-  // print(_observers.size());
+  // LOGS("notify observers: ");
+  // LOG(_observers.size());
   for(int i=0; i<_observers.size(); i++){
-  // print((int)this);
+  // LOG((int)this);
     _observers[i]->update(this);
   }
 }
 
 void ISubject::attach(IObserver *observer){
-  // printf("attatching Observer: ");
-  // print((int)this);
+  LOGS("attatching Observer: ");
+  // LOG((int)this);
   _observers.push_back(observer);
-  // print(_observers.size());
+  LOG(_observers.size());
 }
 
 void ISubject::detatch(IObserver *observer){
+  LOGS("Detaching Observer: ");
+
   std::vector<class IObserver *>::iterator position = std::find(_observers.begin(), _observers.end(), observer);
-  if (position != _observers.end()) // == vector.end() means the element was not found
+  if (position != _observers.end()) {// == vector.end() means the element was not found
     _observers.erase(position);
+    LOGS("remove observer: ");
+    LOG(_observers.size());
+  }
 }

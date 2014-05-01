@@ -8,35 +8,55 @@ class BBSensor : public ISubject
 {
 public:
 	
+	// enum SensorType {
+	// 	ANALOG, 
+	// 	DIGITAL
+	// };
+
+
 	enum SensorType {
-		ANALOG, 
-		DIGITAL
+		EZ,
+		PIR
 	};
+
+
 
 	// BBSensor();
 	// BBSensor(SensorType);
+	BBSensor(int pin, SensorType);
 	BBSensor(SensorType, int pin, bool invert=false);
 
-	void begin();
+
+	
+	static void syncronize(byte pin, int ping, long unsigned rest); // micros, millis
+
+
+
+	virtual void begin();
+	// void begin();
 	void setPin(int pin);
+	int getPin();
+
+	void invertOutput(bool);
+
 	void setInputRange(int low, int high);
 	void setOutputRange(int low, int high);
-	void setAveragingPeriod(int avgMillis);
+	// void setAveragingPeriod(int avgMillis);
 	int  read();
 	void update();
-	bool isMotionDetected();
+	// bool isMotionDetected();
 
 private:
 	int  _pin;
-	int  _sensorType;
+	
 	int  _inputRange[2];
 	int  _outputRange[2];
 	bool _invertOutput;
 	// averaging
-	int  _updateInterval;
+	// int  _updateInterval;
 	
 	static const int DEFAULT_SMOOTHING = 10; // aka length of readings array
-	static const int DEFAULT_UPDATE_INTERVAL = 50;
+	// static const int DEFAULT_UPDATE_INTERVAL = 50;
 	int _smoothingFactor;
 	int _readings[DEFAULT_SMOOTHING];
 	unsigned long _runningTotal;
@@ -46,9 +66,13 @@ private:
 	int _numReads;
 	int _lastMillis;
 
-	int readSensor();
+	
 	int scaleSensorValue(int value);
 	void setDefaultRanges();
+
+protected:
+	int  _sensorType;
+	virtual int readSensor();
 	void setSmoothingFactor(int=DEFAULT_SMOOTHING);
 };
 

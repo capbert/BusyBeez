@@ -3,11 +3,10 @@
 #include "BBRoom.h"
 #include "BBSensor.h"
 #include "BBUtils.h"
-#include "BBSample.h"
+// #include "BBSample.h"
 
 
-BBRoom::BBRoom(BBSample *samples, int numSamples):
-  p_samples(samples), 
+BBRoom::BBRoom(int numSamples):
   _numSamples(numSamples)
 {
   setTimeout(DEFAULT_TIMEOUT); //TODO: REMOVE
@@ -30,12 +29,14 @@ void BBRoom::setState(BBRoom::RoomState state){
 void BBRoom::update(ISubject *subject){
   int sensorValue = ((BBSensor *)subject)->read();
 
+
   if (_state == ROOM_STATE_ACTIVE){
     // sensor is off and room is active so turn it off
     if (sensorValue < 0){
-
     // only allow room to deactivate after min time... 
       updateTimeout();
+    }else{
+      resetTimeout();
     }
 
   }else if (_state == ROOM_STATE_INACTIVE){
@@ -63,7 +64,7 @@ void BBRoom::setStateChangeCallback(RoomUpdateCallback cb){
 
 
 void BBRoom::deactivateRoom(){
-  printf("--- deactiveate room ---");
+  LOGS("--- deactiveate room ---");
     resetTimeout();
     setState(ROOM_STATE_INACTIVE);
     triggerRoomAmbienceOff();
@@ -71,7 +72,7 @@ void BBRoom::deactivateRoom(){
 
 void BBRoom::activateRoom(){
   
-  printf("--- activate room ---");
+  LOGS("--- activate room ---");
   setState(ROOM_STATE_ACTIVE);
   triggerRoomAmbienceOn();
 
@@ -80,20 +81,24 @@ void BBRoom::activateRoom(){
 
 void BBRoom::triggerRoomAmbienceOn(){
   // trigger midi on
-  printf("--- trigger room samples ON ---");
+  LOGS("--- trigger room samples ON ---");
   for(int i = 0; i < _numSamples; i++){
-    p_samples[i].triggerOn(false); 
+    // p_samples[i].triggerOn(false); 
+    MIDI.sendNoteOn(i,127,16);
   }
-  MIDI.sendNoteOn(59, 127, 1); // TODO: trigger 'global' fadeOut
+  // TODO: what is the deal with triggering ambience samples?
+  MIDI.sendNoteOn(126, 127, 16); // TODO: trigger 'global' fadeOut
 }
 
 void BBRoom::triggerRoomAmbienceOff(){
 
-  printf("--- trigger room samples OFF ---");
+  LOGS("--- trigger room samples OFF ---");
   // for(int i = 0; i < _numSamples; i++){
   //   p_samples[i].triggerOff(true); 
+  //   MIDI.sendNoteOn(i,127,16);
   // }
-
-  MIDI.sendNoteOn(58, 127, 1); // TODO: trigger 'global' fadeOut
+  // TODO: set timer for fade time
+  
+  MIDI.sendNoteOn(127, 127, 16); // TODO: trigger 'global' fadeOut
 
 }

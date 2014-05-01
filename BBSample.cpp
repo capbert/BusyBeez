@@ -26,8 +26,8 @@ BBSample::BBSample(int ch, int note):
 
 void BBSample::assignToOutput(int output){
   assert(output >= 0 && output<NUMBER_OF_PLAYBACK_OUTPUTS);
-  printf("set output:");
-  print(output);
+  LOGS("set output:");
+  LOG(output);
   _output = output;
 
   for (int i = 0; i < NUMBER_OF_PLAYBACK_OUTPUTS; ++i)
@@ -39,8 +39,8 @@ void BBSample::assignToOutput(int output){
 
 
 void BBSample::triggerOn(bool fadeIn){
-  // printf("sample on");
-  // print(_channel);
+  // LOGS("sample on");
+  // LOG(_channel);
 
   _startMillis = millis();
   if(fadeIn)
@@ -50,8 +50,8 @@ void BBSample::triggerOn(bool fadeIn){
 
 void BBSample::triggerOff(bool fadeOut){
 
-  // printf("sample off");
-  // print(_channel);
+  // LOGS("sample off");
+  // LOG(_channel);
   if(fadeOut)
     MIDI.sendNoteOn(FADE_OUT_NOTE, 127, _channel);
   else

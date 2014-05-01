@@ -3,17 +3,17 @@
 
 #include <Arduino.h>
 
-// #define ALLOW_SERIAL_PRINT
+// #define DEBUG
 
-#ifdef ALLOW_SERIAL_PRINT
+#ifdef DEBUG
 
-  #define printf(val) Serial.println(F(val))
-  #define print(val) Serial.println(val)
+  #define LOGS(val) Serial.println(F(val))
+  #define LOG(val) Serial.println(val)
 
 #else
 
-  #define printf(val) do {}while(0)
-  #define print(val) do {}while(0)
+  #define LOGS(val) do {}while(0)
+  #define LOG(val) do {}while(0)
 
 #endif
 

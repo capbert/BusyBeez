@@ -3,111 +3,52 @@
 #define BBConstants_h 
 
 #include "BBRoom.h"
-
-
-// =========================== Constants ===========================
-static const int NUM_FLOWER_SAMPLES = 12;
-
+#include "EZSensor.h"
+#include "PIRSensor.h"
 
 
 
-
-// =========================== Samples ===========================
-static BBSample g_FlowerSamples[NUM_FLOWER_SAMPLES] = {
-  BBSample(1, 0),
-  BBSample(2, 0),
-  BBSample(3, 0),
-  BBSample(4, 0),
-  BBSample(5, 0),
-  BBSample(6, 0),
-  BBSample(7, 0),
-  BBSample(8, 0),
-  BBSample(9, 0),
-  BBSample(10, 0),
-  BBSample(11, 0),
-  BBSample(12, 0)
-};
-
-static BBSample g_FlowerSampleGroup01[2] = {
-  g_FlowerSamples[0],
-  g_FlowerSamples[1],
-};
-
-static BBSample g_FlowerSampleGroup02[2] = {
-  g_FlowerSamples[2],
-  g_FlowerSamples[3],
-};
-
-static BBSample g_FlowerSampleGroup03[2] = {
-  g_FlowerSamples[4],
-  g_FlowerSamples[5],
-};
-
-static BBSample g_FlowerSampleGroup04[3] = {
-  g_FlowerSamples[6],
-  g_FlowerSamples[7],
-  g_FlowerSamples[8],
-};
-
-static BBSample g_FlowerSampleGroup05[3] = {
-  g_FlowerSamples[9],
-  g_FlowerSamples[10],
-  g_FlowerSamples[11],
-};
-
-static const int NUM_AMBIENCE_SAMPLES = 1;
-
-static BBSample g_AmbienceSamples[NUM_AMBIENCE_SAMPLES] = {
-  BBSample(16, 0),
-};
-
-// =========================== End Samples ===========================
-
-
-
-
+static const byte RX_PIN = 8;
 
 // =========================== Sensors ===========================
 
-static BBSensor g_RoomMotionSensor(BBSensor::DIGITAL, 2);
+static const int NUM_ROOM_SENSORS = 3;
+static BBSensor *g_RoomSensors[NUM_ROOM_SENSORS] = {
+  new PIRSensor(2),
+  new PIRSensor(3),
+  new PIRSensor(4)
+};
 
-
-static BBRoom g_Room(g_AmbienceSamples, NUM_AMBIENCE_SAMPLES);
-
-
-
-static const int NUM_FLOWERS = 5;
-
-
-static BBSensor g_FlowerSensors[NUM_FLOWERS] = {
-  BBSensor(BBSensor::ANALOG, A0),
-  BBSensor(BBSensor::ANALOG, A1),
-  BBSensor(BBSensor::ANALOG, A2),
-  BBSensor(BBSensor::ANALOG, A3),
-  // BBSensor(BBSensor::ANALOG, A4),
-  BBSensor(BBSensor::ANALOG, A5, true),
+static const int NUM_FLOWERS = 6;
+static EZSensor *g_FlowerSensors[NUM_FLOWERS] = {
+  new EZSensor(A0),
+  new EZSensor(A1),
+  new EZSensor(A2),
+  new EZSensor(A3),
+  new EZSensor(A4),
+  new EZSensor(A5)
 };
 
 
-// =========================== End Sensors ===========================
+
+// =========================== Room ===========================
+
+static const int NUM_AMBIENCE_SAMPLES = 1;
+static BBRoom g_Room(NUM_AMBIENCE_SAMPLES);
 
 
 
 // =========================== Flowers ===========================
 
 
-static BBFlower g_Flowers[NUM_FLOWERS] = {
-  BBFlower(g_FlowerSampleGroup01, 2, 1),
-  BBFlower(g_FlowerSampleGroup02, 2, 2),
-  BBFlower(g_FlowerSampleGroup03, 2, 3),
-  BBFlower(g_FlowerSampleGroup04, 2, 4),
-  BBFlower(g_FlowerSampleGroup05, 2, 5),
-  // BBFlower(g_FlowerSampleGroup06, 2, 1),
+static BBFlower *g_Flowers[NUM_FLOWERS] = {
+  new BBFlower(0, 2),
+  new BBFlower(1, 2),
+  new BBFlower(2, 2),
+  new BBFlower(3, 2),
+  new BBFlower(4, 2),
+  new BBFlower(5, 2)
   };
-
-
-// =========================== End Flowers ===========================
-
 
 
 #endif

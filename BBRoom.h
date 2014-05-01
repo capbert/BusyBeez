@@ -22,7 +22,7 @@ public:
 
 
   // BBRoom();
-  BBRoom(BBSample *samples, int numSamples);
+  BBRoom(int numSamples);
   // ~BBRoom();
   RoomState getState();
   void setState(RoomState);
@@ -31,9 +31,10 @@ public:
   void setStateChangeCallback(RoomUpdateCallback);
 
 private:
-  static const int DEFAULT_TIMEOUT = 30000;
+  static const int DEFAULT_TIMEOUT = 20000;
   RoomState _state;
-  BBSample *p_samples;
+  
+  // BBSample *p_samples;
   int _numSamples;
   RoomUpdateCallback _stateChangeCallback;
 
