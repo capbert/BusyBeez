@@ -8,6 +8,7 @@
 
 
 
+static const byte TX_PIN = 7;
 static const byte RX_PIN = 8;
 
 // =========================== Sensors ===========================

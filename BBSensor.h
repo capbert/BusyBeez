@@ -29,7 +29,7 @@ public:
 
 	
 	static void syncronize(byte pin, int ping, long unsigned rest); // micros, millis
-
+	static void beginConstantLoop(byte RX, byte TX, int ping);
 
 
 	virtual void begin();

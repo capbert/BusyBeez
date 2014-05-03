@@ -32,6 +32,28 @@ void BBSensor::syncronize(byte pin, int ping, long unsigned rest){
 
 
 
+void BBSensor::beginConstantLoop(byte RX, byte TX, int ping){
+	LOGS("begin constant loop");
+	
+	/*
+		http://itp.nyu.edu/physcomp/sensors/Reports/SonarRanger
+	*/
+
+	pinMode(TX, OUTPUT);
+	pinMode(RX, OUTPUT);
+
+	delay(500); // allow time for sensors to power up
+	
+	digitalWrite(TX, HIGH); // pull TX high. This puts the TX pin in pulse mode
+
+
+	digitalWrite(RX, HIGH); // kick-start the ranging cycle
+	delayMicroseconds(ping);
+	digitalWrite(RX, LOW);
+
+	delay(500); // allow some time for the sensors to calibrate
+	
+}
 
 
 

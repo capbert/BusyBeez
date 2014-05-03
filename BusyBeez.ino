@@ -32,18 +32,28 @@ void setup(){
   LOG(freeMemory());
 
 
-  configureRoom();
-  configureFlowers();
+  BBSensor::beginConstantLoop(RX_PIN, TX_PIN, 100);
 
-  deactivateFlowers();
-  // activateFlowers();
+
+
+  // configureRoom();
+  // configureFlowers();
+  // deactivateFlowers();
+
 }
 
 
 
 void loop(){
   
-  BBSensor::syncronize(RX_PIN, 50,50);
+  // BBSensor::syncronize(RX_PIN, 50,50);
+  // updateSensors();
+  printSensorValues();
+
+}
+
+
+void updateSensors(){
 
   for(int i=0; i<NUM_ROOM_SENSORS; i++){
     g_RoomSensors[i]->update();
@@ -54,8 +64,6 @@ void loop(){
   }
 
 }
-
-
 
 
 void activateFlowers(){
@@ -101,8 +109,37 @@ void configureFlowers(){
   for(int i=0; i<NUM_FLOWERS; i++){
     LOGS("config flowers");
     EZSensor *sensor = g_FlowerSensors[i];
-    // sensor->setInputRange(20,144); // TODO: FIXME: config the lone ultrasonic 
-    sensor->attach(g_Flowers[i]);
+    // sensor->attach(g_Flowers[i]);
     sensor->begin();
   }
 }
+
+
+
+
+
+
+
+
+void printSensorValues(){
+  String vals;
+
+  vals = String("Analog Values >>  A0: ") + analogRead(A0) + "          A1: " + analogRead(A1) + "          A2: " + analogRead(A2) + "          A3: " + analogRead(A3) + "          A4: " + analogRead(A4) + "          A5: " + analogRead(A5);
+
+
+
+  // for(int i=0; i<NUM_FLOWERS; i++){
+  //   int val = g_FlowerSensors[i]->read();
+  //   vals = vals + "   A" + i +": " + val ;
+  // }
+
+  LOG(vals);
+
+
+
+
+
+  delay(250);
+
+}
+
