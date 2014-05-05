@@ -28,7 +28,7 @@ public:
 
 
 	
-	static void syncronize(byte pin, int ping, long unsigned rest); // micros, millis
+	static void syncronize(byte pin, int ping, int rest); // micros, millis
 	static void beginConstantLoop(byte RX, byte TX, int ping);
 
 
@@ -55,7 +55,8 @@ private:
 	// averaging
 	// int  _updateInterval;
 	
-	static const int DEFAULT_SMOOTHING = 10; // aka length of readings array
+	// static const int DEFAULT_SMOOTHING = 10; // aka length of readings array
+	static const int DEFAULT_SMOOTHING = 5; // aka length of readings array
 	// static const int DEFAULT_UPDATE_INTERVAL = 50;
 	int _smoothingFactor;
 	int _readings[DEFAULT_SMOOTHING];
@@ -69,6 +70,14 @@ private:
 	
 	int scaleSensorValue(int value);
 	void setDefaultRanges();
+
+	/* mode filter */
+
+
+
+	// void iSort(int *, int);// insert sort algorithm
+
+
 
 protected:
 	int  _sensorType;

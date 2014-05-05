@@ -3,7 +3,7 @@
 #include "ISubject.h"
 #include "BBUtils.h"
 
-
+#include <vector>
 
 
 
@@ -22,12 +22,13 @@ BBSensor::BBSensor(int pin, SensorType type):
 // Static
 // **********************************************************
 
-void BBSensor::syncronize(byte pin, int ping, long unsigned rest){
-	LOGS("sync sensor");
+void BBSensor::syncronize(byte pin, int ping, int rest){
+	// LOGS("sync sensor");
 	digitalWrite(pin, HIGH);
 	delayMicroseconds(ping);
 	digitalWrite(pin, LOW);
-	delay(rest);
+	// delay(rest);
+
 }
 
 
@@ -66,7 +67,7 @@ void BBSensor::beginConstantLoop(byte RX, byte TX, int ping){
 void BBSensor::begin(){
 	// if (_sensorType == DIGITAL)
 		// pinMode(_pin, INPUT);
-	// LOGS("BASE SENSOR BEGIN");
+	LOGS("BASE SENSOR BEGIN");
 	_rollingAverage = 0;
 	_runningTotal = 0;
 	for(int i=0; i<DEFAULT_SMOOTHING; i++){
@@ -131,43 +132,70 @@ int BBSensor::read() {
 
 void BBSensor::update(){
 	
-	// CALCULATE ROLLING AVERAGE
+	// LOGS("BBSensor::update()");
 
+/* 
+
+	ROLLING AVERAGE
 
 	_runningTotal = _runningTotal - _readings[_currentIndex];
-
 	_readings[_currentIndex] = readSensor();
-
 	_runningTotal = _runningTotal + _readings[_currentIndex];
-	// LOGS("_rollingAverage");
-	// Serial.LOG("AVERAGE: ");
-	// Serial.println(F("AVERAGE: "));
-	// Serial.println(_readings[_currentIndex]);
-	// LOG(_readings[_currentIndex]);
-	// LOG(_runningTotal);
-	// LOG(_currentIndex);
 	_currentIndex++;
 	_currentIndex = _currentIndex % DEFAULT_SMOOTHING;
-
 	_rollingAverage = _runningTotal / DEFAULT_SMOOTHING; // TODO: move this to read method
-	// LOG(_rollingAverage);
-	// Serial.println(_rollingAverage);
-	// LOG(_rollingAverage);
-	// TEST UPDATE TIME
 
-	// int elapsedMillis =  millis() - _lastMillis ;
+*/
 
-	// if(elapsedMillis > _updateInterval){
-	// 	notify();
-	// 	_lastMillis = millis();
-	// }
+/*
+	TIMEOUT
+
+	int elapsedMillis =  millis() - _lastMillis ;
+	if(elapsedMillis > _updateInterval){
+		notify();
+		_lastMillis = millis();
+	}
+
+	*/
+
+
+/*
+	MODE FILTER
+*/
+	_readings[_currentIndex] = readSensor();
+	_currentIndex ++;
+	_currentIndex = _currentIndex % DEFAULT_SMOOTHING;
+
+	std::vector<int> v (_readings, _readings + DEFAULT_SMOOTHING);
+	std::sort (v.begin(), v.end());
+	
+	int median = DEFAULT_SMOOTHING / 2;
+	_rollingAverage = v.at(median);
+
 	notify();
+
 }
+
 
 
 // **********************************************************
 // Private
 // **********************************************************
+
+// void BBSensor::iSort(/*array pointer*/ int *a, /*array size*/int n) 
+// {
+//   for (int i = 1; i < n; ++i)
+//   {
+//     int j = a[i];
+//     int k;
+//     for (k = i - 1; (k >= 0) && (j < a[k]); k--)
+//     {
+//       a[k + 1] = a[k];
+//     }
+//     a[k + 1] = j;
+//   }
+// }
+
 
 int BBSensor::readSensor(){
 	return 0;

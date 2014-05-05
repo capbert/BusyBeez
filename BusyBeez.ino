@@ -1,6 +1,6 @@
 #include <MIDI.h>
 
-// #include "SimpleTimer.h"
+#include "SimpleTimer.h"
 
 // #include "BBSample.h"
 #include "BBSensor.h"
@@ -20,6 +20,8 @@
 // TODO: abstract MIDI calls aka ableton harnass?
 // TODO: configure sensors and flowers using config struct objs
 
+static const int SENSOR_REFRESH = 60 * NUM_FLOWERS;
+
 
 void setup(){
 
@@ -32,24 +34,28 @@ void setup(){
   LOG(freeMemory());
 
 
-  BBSensor::beginConstantLoop(RX_PIN, TX_PIN, 100);
+  BBSensor::beginConstantLoop(RX_PIN, TX_PIN, 50);
 
 
 
-  // configureRoom();
-  // configureFlowers();
-  // deactivateFlowers();
+  configureRoom();
+  configureFlowers();
+  deactivateFlowers();
 
 }
 
-
-
 void loop(){
-  
-  // BBSensor::syncronize(RX_PIN, 50,50);
-  // updateSensors();
-  printSensorValues();
+  // LOG(SENSOR_REFRESH);
 
+  if(millis() % SENSOR_REFRESH < 110){
+    // LOG("REFRESH: ");
+    BBSensor::syncronize(RX_PIN, 50,50);
+  }
+
+
+  updateSensors();
+  printSensorValues();
+  delay(100);
 }
 
 
@@ -109,7 +115,7 @@ void configureFlowers(){
   for(int i=0; i<NUM_FLOWERS; i++){
     LOGS("config flowers");
     EZSensor *sensor = g_FlowerSensors[i];
-    // sensor->attach(g_Flowers[i]);
+    sensor->attach(g_Flowers[i]);
     sensor->begin();
   }
 }
@@ -124,22 +130,21 @@ void configureFlowers(){
 void printSensorValues(){
   String vals;
 
-  vals = String("Analog Values >>  A0: ") + analogRead(A0) + "          A1: " + analogRead(A1) + "          A2: " + analogRead(A2) + "          A3: " + analogRead(A3) + "          A4: " + analogRead(A4) + "          A5: " + analogRead(A5);
+  vals = String("Analog Values >>  A0: ") + analogRead(A0) + "   A1: " + analogRead(A1) + "   A2: " + analogRead(A2) + "   A3: " + analogRead(A3) + "   A4: " + analogRead(A4) + "   A5: " + analogRead(A5);
 
-
+  // String rawVals = String("A0: ") + analogRead(A0);
 
   // for(int i=0; i<NUM_FLOWERS; i++){
   //   int val = g_FlowerSensors[i]->read();
   //   vals = vals + "   A" + i +": " + val ;
   // }
-
+  // LOG("-----------");
+  // LOG(rawVals);
   LOG(vals);
 
 
 
 
-
-  delay(250);
 
 }
 
