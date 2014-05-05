@@ -63,6 +63,18 @@ void BBSensor::beginConstantLoop(byte RX, byte TX, int ping){
 // Public API
 // **********************************************************
 
+void BBSensor::configure(SensorDescription *config){
+	LOGS("BBSensor::configure");
+	setInputRange(config->inputRange.low, config->inputRange.high);
+	// if(config.outputRange.low != NULL)
+		setOutputRange(config->outputRange.low, config->outputRange.high);
+
+	LOG(_inputRange[0]);
+	LOG(_inputRange[1]);
+	LOG(_outputRange[0]);
+	LOG(_outputRange[1]);
+
+}
 
 void BBSensor::begin(){
 	// if (_sensorType == DIGITAL)

@@ -4,6 +4,12 @@
 #include "ISubject.h"
 
 // class BBSensor
+
+
+
+
+struct SensorDescription;
+
 class BBSensor : public ISubject
 {
 public:
@@ -12,6 +18,8 @@ public:
 	// 	ANALOG, 
 	// 	DIGITAL
 	// };
+
+
 
 
 	enum SensorType {
@@ -45,7 +53,7 @@ public:
 	int  read();
 	void update();
 	// bool isMotionDetected();
-
+	void configure(SensorDescription*);
 private:
 	int  _pin;
 	
@@ -84,5 +92,18 @@ protected:
 	virtual int readSensor();
 	void setSmoothingFactor(int=DEFAULT_SMOOTHING);
 };
+
+
+struct SensorRange {
+	int low;
+	int high;
+};
+
+struct SensorDescription {
+	BBSensor::SensorType type;
+	SensorRange inputRange;
+	SensorRange outputRange;
+};
+
 
 #endif // BBSensor_h
