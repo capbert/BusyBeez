@@ -2,7 +2,7 @@
 #define BBSensor_h
 
 #include "ISubject.h"
-
+#include <map>
 // class BBSensor
 
 
@@ -27,6 +27,19 @@ public:
 		PIR
 	};
 
+	typedef std::vector< BBSensor *> SensorVector;
+	typedef std::map<SensorType, SensorVector> SensorMap;
+	typedef SensorVector::iterator SensorVectorIterator;
+	typedef SensorMap::iterator SensorMapIterator;
+
+	// static SensorMap __sensors;
+	static SensorVector __vector;
+
+	// typedef std::vector< class BBSensor *> SensorSet;
+	// typedef std::map<SensorType, SensorSet> SensorTypeMap;
+	// typedef SensorTypeMap::iterator MapIterator;
+	// typedef SensorSet::iterator SetIterator;
+
 
 
 	// BBSensor();
@@ -35,9 +48,11 @@ public:
 	BBSensor(SensorType, int pin, bool invert=false);
 
 
-	
-	static void syncronize(byte pin, int ping, int rest); // micros, millis
-	static void beginConstantLoop(byte RX, byte TX, int ping);
+	static BBSensor *create(SensorDescription);
+	static void updateAll();
+	static void syncRead(int pin, int ping); // micros, millis
+	static void start(int);
+	// static void beginConstantLoop(byte RX, byte TX, int ping);
 
 
 	virtual void begin();
@@ -101,6 +116,7 @@ struct SensorRange {
 
 struct SensorDescription {
 	BBSensor::SensorType type;
+	int pin;
 	SensorRange inputRange;
 	SensorRange outputRange;
 };

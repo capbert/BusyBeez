@@ -5,7 +5,8 @@
 
 #include <vector>
 
-
+#include "EZSensor.h"
+#include "PIRSensor.h"
 
 
 
@@ -22,10 +23,75 @@ BBSensor::BBSensor(int pin, SensorType type):
 // Static
 // **********************************************************
 
-void BBSensor::syncronize(byte pin, int ping, int rest){
-	// LOGS("sync sensor");
+
+// BBSensor::SensorMap BBSensor::__sensors;
+
+BBSensor::SensorVector BBSensor::__vector;
+
+BBSensor *BBSensor::create(SensorDescription config){
+
+	BBSensor *instance; 
+	// instance = new EZSensor(config.pin);
+	// 		instance->configure(&config);
+	switch(config.type){
+		case EZ:
+			LOGS("create EZ");
+			instance = new EZSensor(config.pin);
+			instance->configure(&config);
+		break;
+		case PIR:
+			LOGS("create PIR");
+			instance = new PIRSensor(config.pin);
+			instance->configure(&config);
+		break;
+	}
+
+	// __sensors[config.type].push_back(instance);
+	__vector.push_back(instance);
+	return instance;
+
+}
+
+void BBSensor::updateAll(){
+
+	// LOGS("BBSensor::updateAll");
+// 	for (SensorMapIterator vec = __sensors.begin(); vec != __sensors.end(); vec++ )
+// 	{
+// 		LOGS("-- iterate");
+
+// 		// for (int i = 0; i < __vector.size(); ++i)
+// 		// {
+// 		// 	__vector.at(i)->update();
+// 		// }
+
+
+// 		// for (SensorVectorIterator sen = vec->second.begin(); sen != vec->second.end(); sen++)
+// 		// {
+// 		// 	LOGS(" ---- sensor");
+// 		// 	// (*sen)->update();
+// 		// }
+// }
+		for (SensorVectorIterator sen = __vector.begin(); sen != __vector.end(); sen++)
+		{
+			// LOGS(" ---- sensor");
+			(*sen)->update();
+		}
+	
+
+}
+
+
+
+void BBSensor::start(int pin){
+	LOGS("BBSensor::start");
+	pinMode(pin, OUTPUT);
+}
+
+void BBSensor::syncRead(int pin, int ping){
+	// LOGS("BBSensor::syncRead");
 	digitalWrite(pin, HIGH);
-	delayMicroseconds(ping);
+	// delayMicroseconds(ping);
+	delay(ping);
 	digitalWrite(pin, LOW);
 	// delay(rest);
 
@@ -33,28 +99,29 @@ void BBSensor::syncronize(byte pin, int ping, int rest){
 
 
 
-void BBSensor::beginConstantLoop(byte RX, byte TX, int ping){
-	LOGS("begin constant loop");
+
+// void BBSensor::beginConstantLoop(byte RX, byte TX, int ping){
+// 	LOGS("begin constant loop");
 	
-	/*
-		http://itp.nyu.edu/physcomp/sensors/Reports/SonarRanger
-	*/
+// 	/*
+// 		http://itp.nyu.edu/physcomp/sensors/Reports/SonarRanger
+// 	*/
 
-	pinMode(TX, OUTPUT);
-	pinMode(RX, OUTPUT);
+// 	pinMode(TX, OUTPUT);
+// 	pinMode(RX, OUTPUT);
 
-	delay(500); // allow time for sensors to power up
+// 	delay(500); // allow time for sensors to power up
 	
-	digitalWrite(TX, HIGH); // pull TX high. This puts the TX pin in pulse mode
+// 	digitalWrite(TX, HIGH); // pull TX high. This puts the TX pin in pulse mode
 
 
-	digitalWrite(RX, HIGH); // kick-start the ranging cycle
-	delayMicroseconds(ping);
-	digitalWrite(RX, LOW);
+// 	digitalWrite(RX, HIGH); // kick-start the ranging cycle
+// 	delayMicroseconds(ping);
+// 	digitalWrite(RX, LOW);
 
-	delay(500); // allow some time for the sensors to calibrate
+// 	delay(500); // allow some time for the sensors to calibrate
 	
-}
+// }
 
 
 
@@ -65,21 +132,21 @@ void BBSensor::beginConstantLoop(byte RX, byte TX, int ping){
 
 void BBSensor::configure(SensorDescription *config){
 	LOGS("BBSensor::configure");
+	setPin(config->pin);
 	setInputRange(config->inputRange.low, config->inputRange.high);
-	// if(config.outputRange.low != NULL)
-		setOutputRange(config->outputRange.low, config->outputRange.high);
+	setOutputRange(config->outputRange.low, config->outputRange.high);
 
-	LOG(_inputRange[0]);
-	LOG(_inputRange[1]);
-	LOG(_outputRange[0]);
-	LOG(_outputRange[1]);
+	// LOG(_inputRange[0]);
+	// LOG(_inputRange[1]);
+	// LOG(_outputRange[0]);
+	// LOG(_outputRange[1]);
 
 }
 
 void BBSensor::begin(){
 	// if (_sensorType == DIGITAL)
 		// pinMode(_pin, INPUT);
-	LOGS("BASE SENSOR BEGIN");
+	// LOGS("BASE SENSOR BEGIN");
 	_rollingAverage = 0;
 	_runningTotal = 0;
 	for(int i=0; i<DEFAULT_SMOOTHING; i++){
@@ -143,7 +210,7 @@ int BBSensor::read() {
 }
 
 void BBSensor::update(){
-	
+	// 
 	// LOGS("BBSensor::update()");
 
 /* 

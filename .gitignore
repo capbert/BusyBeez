@@ -21,3 +21,5 @@
 *.app
 stino.settings
 .DS_Store
+BB.sublime-workspace
+BB.sublime-project

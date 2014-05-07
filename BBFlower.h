@@ -74,4 +74,12 @@ private:
 
 };
 
+// TODO: this description should not belong to the flower class.
+struct FlowerDescription {
+  int id;
+  int numSamples;
+  SensorDescription sensor;
+};
+
+
 #endif
