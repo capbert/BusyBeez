@@ -59,7 +59,7 @@ void BBFlower::triggerSample(){
   if (getState() == FLOWER_STATE_ACTIVE) return; // don't trigger if already triggered
 
   LOGS("BBFlower::trigger sample");
-  int _currentNote = rand() % _numSamples;
+  _currentNote = rand() % _numSamples;
   MIDI.sendNoteOn(_currentNote, 127, _id+1); // TODO: channels start at 1
   // p_currentSample = getRandomSample(); 
   // p_currentSample->assignToOutput(_speakerOutputID);
