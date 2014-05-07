@@ -6,7 +6,6 @@
 #include "BBSensor.h"
 #include "EZSensor.h"
 #include "PIRSensor.h"
-#include "BBSoundSetPool.h"
 
 
 // static const byte TX_PIN = 7;
