@@ -24,9 +24,9 @@ BBSensor::BBSensor(int pin, SensorType type):
 // **********************************************************
 
 
-// BBSensor::SensorMap BBSensor::__sensors;
+BBSensor::SensorMap BBSensor::__sensors;
 
-BBSensor::SensorVector BBSensor::__vector;
+// BBSensor::SensorVector BBSensor::__vector;
 
 BBSensor *BBSensor::create(SensorDescription config){
 
@@ -35,19 +35,21 @@ BBSensor *BBSensor::create(SensorDescription config){
 	// 		instance->configure(&config);
 	switch(config.type){
 		case EZ:
-			LOGS("create EZ");
+			// LOGS("create EZ");
 			instance = new EZSensor(config.pin);
 			instance->configure(&config);
 		break;
 		case PIR:
-			LOGS("create PIR");
+			// LOGS("create PIR");
 			instance = new PIRSensor(config.pin);
 			instance->configure(&config);
 		break;
 	}
 
 	// __sensors[config.type].push_back(instance);
-	__vector.push_back(instance);
+
+	__sensors.insert(SensorMapPair(config.type, instance));
+	// __vector.push_back(instance);
 	return instance;
 
 }
@@ -55,31 +57,52 @@ BBSensor *BBSensor::create(SensorDescription config){
 void BBSensor::updateAll(){
 
 	// LOGS("BBSensor::updateAll");
-// 	for (SensorMapIterator vec = __sensors.begin(); vec != __sensors.end(); vec++ )
-// 	{
-// 		LOGS("-- iterate");
-
-// 		// for (int i = 0; i < __vector.size(); ++i)
-// 		// {
-// 		// 	__vector.at(i)->update();
-// 		// }
 
 
-// 		// for (SensorVectorIterator sen = vec->second.begin(); sen != vec->second.end(); sen++)
-// 		// {
-// 		// 	LOGS(" ---- sensor");
-// 		// 	// (*sen)->update();
-// 		// }
-// }
-		for (SensorVectorIterator sen = __vector.begin(); sen != __vector.end(); sen++)
-		{
-			// LOGS(" ---- sensor");
-			(*sen)->update();
-		}
-	
+	for (SensorMapIterator sen = __sensors.begin(); sen != __sensors.end(); sen++)
+	{
+		// LOGS("	update: ");
+		(*sen).second->update();
+	}
+
+	// for (SensorVectorIterator sen = __vector.begin(); sen != __vector.end(); sen++)
+	// {
+	// 	// LOGS(" ---- sensor");
+	// 	(*sen)->update();
+	// }
+
 
 }
 
+void BBSensor::attachType(SensorType type, IObserver *obj){
+
+	// LOGS("BBSensor::attachType()");
+	std::pair<SensorMapIterator, SensorMapIterator> range;
+	range  = __sensors.equal_range(EZ);
+
+	for (SensorMapIterator sen = range.first; sen != range.second; sen++)
+	{
+
+		// LOGS("	attach: ");
+		(*sen).second->attach(obj);
+	}
+
+}
+
+void BBSensor::detatchType(SensorType type, IObserver *obj){
+
+	// LOGS("BBSensor::attachType()");
+	std::pair<SensorMapIterator, SensorMapIterator> range;
+	range  = __sensors.equal_range(EZ);
+
+	for (SensorMapIterator sen = range.first; sen != range.second; sen++)
+	{
+
+		// LOGS("	attach: ");
+		(*sen).second->detatch(obj);
+	}
+
+}
 
 
 void BBSensor::start(int pin){
@@ -131,15 +154,10 @@ void BBSensor::syncRead(int pin, int ping){
 // **********************************************************
 
 void BBSensor::configure(SensorDescription *config){
-	LOGS("BBSensor::configure");
+	// LOGS("BBSensor::configure");
 	setPin(config->pin);
 	setInputRange(config->inputRange.low, config->inputRange.high);
 	setOutputRange(config->outputRange.low, config->outputRange.high);
-
-	// LOG(_inputRange[0]);
-	// LOG(_inputRange[1]);
-	// LOG(_outputRange[0]);
-	// LOG(_outputRange[1]);
 
 }
 
@@ -148,7 +166,7 @@ void BBSensor::begin(){
 		// pinMode(_pin, INPUT);
 	// LOGS("BASE SENSOR BEGIN");
 	_rollingAverage = 0;
-	_runningTotal = 0;
+	// _runningTotal = 0;
 	for(int i=0; i<DEFAULT_SMOOTHING; i++){
 		_readings[i] = 0;
 	}
@@ -185,9 +203,9 @@ void BBSensor::setOutputRange(int low, int high){
 	_outputRange[1] = high;
 }
 
-void BBSensor::setSmoothingFactor(int smoothing){
-	_smoothingFactor = DEFAULT_SMOOTHING;
-}
+// void BBSensor::setSmoothingFactor(int smoothing){
+// 	_smoothingFactor = DEFAULT_SMOOTHING;
+// }
 // get scaled value from sensor
 int BBSensor::read() {
 

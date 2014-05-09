@@ -8,7 +8,6 @@ BBSensor(pin, PIR)
 
   setInputRange(0,1);
   setOutputRange(0,1);
-  setSmoothingFactor(5); //TODO: remove this
 }
 
 int PIRSensor::readSensor(){

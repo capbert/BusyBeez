@@ -3,8 +3,6 @@
 
 #include "ISubject.h"
 #include <map>
-// class BBSensor
-
 
 
 
@@ -27,20 +25,12 @@ public:
 		PIR
 	};
 
-	typedef std::vector< BBSensor *> SensorVector;
-	typedef std::map<SensorType, SensorVector> SensorMap;
-	typedef SensorVector::iterator SensorVectorIterator;
+
+	typedef std::multimap<SensorType, BBSensor *> SensorMap;
+	typedef std::pair<SensorType, BBSensor *>SensorMapPair;
 	typedef SensorMap::iterator SensorMapIterator;
 
-	// static SensorMap __sensors;
-	static SensorVector __vector;
-
-	// typedef std::vector< class BBSensor *> SensorSet;
-	// typedef std::map<SensorType, SensorSet> SensorTypeMap;
-	// typedef SensorTypeMap::iterator MapIterator;
-	// typedef SensorSet::iterator SetIterator;
-
-
+	static SensorMap __sensors;
 
 	// BBSensor();
 	// BBSensor(SensorType);
@@ -50,6 +40,8 @@ public:
 
 	static BBSensor *create(SensorDescription);
 	static void updateAll();
+	static void attachType(SensorType, IObserver *);
+	static void detatchType(SensorType, IObserver *);
 	static void syncRead(int pin, int ping); // micros, millis
 	static void start(int);
 	// static void beginConstantLoop(byte RX, byte TX, int ping);
@@ -81,18 +73,18 @@ private:
 	// static const int DEFAULT_SMOOTHING = 10; // aka length of readings array
 	static const int DEFAULT_SMOOTHING = 5; // aka length of readings array
 	// static const int DEFAULT_UPDATE_INTERVAL = 50;
-	int _smoothingFactor;
+	// int _smoothingFactor;
 	int _readings[DEFAULT_SMOOTHING];
-	unsigned long _runningTotal;
+	// unsigned long _runningTotal;
 	int _rollingAverage;
 	int _currentIndex;
 
-	int _numReads;
-	int _lastMillis;
+	// int _numReads;
+	// int _lastMillis;
 
 	
 	int scaleSensorValue(int value);
-	void setDefaultRanges();
+	// void setDefaultRanges();
 
 	/* mode filter */
 
@@ -105,7 +97,7 @@ private:
 protected:
 	int  _sensorType;
 	virtual int readSensor();
-	void setSmoothingFactor(int=DEFAULT_SMOOTHING);
+	// void setSmoothingFactor(int=DEFAULT_SMOOTHING);
 };
 
 
