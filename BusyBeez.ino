@@ -44,8 +44,8 @@ LOG(MIN_MISC_SOUND_TRIGGER_TIME);
 
   BBSensor::start(TRIGGER_PIN);
 
-  // configureRoom();
-  // configureFlowers();
+  configureRoom();
+  configureFlowers();
 
 
 
@@ -63,9 +63,9 @@ LOG(MIN_MISC_SOUND_TRIGGER_TIME);
 
 
 
-  // TODO : remove!!!
-  activateSoundSets();
-  activateSounds();
+  // TODO : DEBUG remove!!!
+  // activateSoundSets();
+  // activateSounds();
 
 
 
