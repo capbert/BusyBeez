@@ -18,19 +18,28 @@ void ISubject::notify(){
 }
 
 void ISubject::attach(IObserver *observer){
-  LOGS("attatching Observer: ");
+  // LOGS("attatching Observer: ");
   // LOG((int)this);
+  // _observers.push_back(observer);
+
+// don't add if already subscribed
+if (std::find(_observers.begin(), _observers.end(), observer) == _observers.end())
+{
   _observers.push_back(observer);
+}
+
+
+
   LOG(_observers.size());
 }
 
 void ISubject::detatch(IObserver *observer){
-  LOGS("Detaching Observer: ");
+  // LOGS("Detaching Observer: ");
 
-  std::vector<class IObserver *>::iterator position = std::find(_observers.begin(), _observers.end(), observer);
+  ObserverVector::iterator position = std::find(_observers.begin(), _observers.end(), observer);
   if (position != _observers.end()) {// == vector.end() means the element was not found
     _observers.erase(position);
-    LOGS("remove observer: ");
-    LOG(_observers.size());
+    // LOGS("remove observer: ");
+    // LOG(_observers.size());
   }
 }

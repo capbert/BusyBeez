@@ -24,7 +24,7 @@ BBSensor::BBSensor(int pin, SensorType type):
 // **********************************************************
 
 
-BBSensor::SensorMap BBSensor::__sensors;
+// BBSensor::SensorMap BBSensor::__sensors;
 
 // BBSensor::SensorVector BBSensor::__vector;
 
@@ -48,61 +48,55 @@ BBSensor *BBSensor::create(SensorDescription config){
 
 	// __sensors[config.type].push_back(instance);
 
-	__sensors.insert(SensorMapPair(config.type, instance));
+	// __sensors.insert(SensorMapPair(config.type, instance));
 	// __vector.push_back(instance);
 	return instance;
 
 }
 
-void BBSensor::updateAll(){
+// void BBSensor::updateAll(){
 
-	// LOGS("BBSensor::updateAll");
-
-
-	for (SensorMapIterator sen = __sensors.begin(); sen != __sensors.end(); sen++)
-	{
-		// LOGS("	update: ");
-		(*sen).second->update();
-	}
-
-	// for (SensorVectorIterator sen = __vector.begin(); sen != __vector.end(); sen++)
-	// {
-	// 	// LOGS(" ---- sensor");
-	// 	(*sen)->update();
-	// }
+// 	// LOGS("BBSensor::updateAll");
 
 
-}
+// 	for (SensorMapIterator sen = __sensors.begin(); sen != __sensors.end(); sen++)
+// 	{
+// 		// LOGS("	update: ");
+// 		(*sen).second->update();
+// 	}
 
-void BBSensor::attachType(SensorType type, IObserver *obj){
 
-	// LOGS("BBSensor::attachType()");
-	std::pair<SensorMapIterator, SensorMapIterator> range;
-	range  = __sensors.equal_range(EZ);
+// }
 
-	for (SensorMapIterator sen = range.first; sen != range.second; sen++)
-	{
+// void BBSensor::attachType(SensorType type, IObserver *obj){
 
-		// LOGS("	attach: ");
-		(*sen).second->attach(obj);
-	}
+// 	// LOGS("BBSensor::attachType()");
+// 	std::pair<SensorMapIterator, SensorMapIterator> range;
+// 	range  = __sensors.equal_range(EZ);
 
-}
+// 	for (SensorMapIterator sen = range.first; sen != range.second; sen++)
+// 	{
 
-void BBSensor::detatchType(SensorType type, IObserver *obj){
+// 		// LOGS("	attach: ");
+// 		(*sen).second->attach(obj);
+// 	}
 
-	// LOGS("BBSensor::attachType()");
-	std::pair<SensorMapIterator, SensorMapIterator> range;
-	range  = __sensors.equal_range(EZ);
+// }
 
-	for (SensorMapIterator sen = range.first; sen != range.second; sen++)
-	{
+// void BBSensor::detatchType(SensorType type, IObserver *obj){
 
-		// LOGS("	attach: ");
-		(*sen).second->detatch(obj);
-	}
+// 	// LOGS("BBSensor::attachType()");
+// 	std::pair<SensorMapIterator, SensorMapIterator> range;
+// 	range  = __sensors.equal_range(EZ);
 
-}
+// 	for (SensorMapIterator sen = range.first; sen != range.second; sen++)
+// 	{
+
+// 		// LOGS("	attach: ");
+// 		(*sen).second->detatch(obj);
+// 	}
+
+// }
 
 
 void BBSensor::start(int pin){
@@ -121,30 +115,6 @@ void BBSensor::syncRead(int pin, int ping){
 }
 
 
-
-
-// void BBSensor::beginConstantLoop(byte RX, byte TX, int ping){
-// 	LOGS("begin constant loop");
-	
-// 	/*
-// 		http://itp.nyu.edu/physcomp/sensors/Reports/SonarRanger
-// 	*/
-
-// 	pinMode(TX, OUTPUT);
-// 	pinMode(RX, OUTPUT);
-
-// 	delay(500); // allow time for sensors to power up
-	
-// 	digitalWrite(TX, HIGH); // pull TX high. This puts the TX pin in pulse mode
-
-
-// 	digitalWrite(RX, HIGH); // kick-start the ranging cycle
-// 	delayMicroseconds(ping);
-// 	digitalWrite(RX, LOW);
-
-// 	delay(500); // allow some time for the sensors to calibrate
-	
-// }
 
 
 

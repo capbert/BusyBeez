@@ -13,6 +13,7 @@ BBSoundSetPool *BBSoundSetPool::_instance = NULL;
 BBSoundSetPool *BBSoundSetPool::getInstance(){
   if(!_instance){
     _instance = new BBSoundSetPool();
+    // srand(rand());
   }
   return _instance;
 }
@@ -57,6 +58,7 @@ void BBSoundSetPool::setPool(BBSoundSet *(sets[]), int count){
 void BBSoundSetPool::shuffle(){
   // LOGS("BBSoundSet::shuffle");
   std::random_shuffle(_sets, _sets + _numSets); // shuffle STL containerstd
+
 }
 
 BBSoundSet *BBSoundSetPool::getSet(){
@@ -67,8 +69,8 @@ BBSoundSet *BBSoundSetPool::getSet(){
   LOGS("BBSoundSetPool::getSet()");
   LOG(_currentIndex);
   LOG(_numSets);
-  if( _currentIndex == _numSets){
     LOGS("-------------- RESET SET POOL --------------");
+  if( _currentIndex == _numSets){
     shuffle();
     _currentIndex = 0;
   }

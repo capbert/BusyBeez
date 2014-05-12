@@ -9,7 +9,9 @@ class ISubject
 {
 
   private:
-    std::vector<class IObserver *> _observers;
+
+    typedef std::vector<class IObserver *> ObserverVector;
+     ObserverVector _observers;
 
   public:
     

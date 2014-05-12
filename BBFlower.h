@@ -59,9 +59,9 @@ private:
 
   // BBSensor *p_sensor;
 
-  int _numSamples;
-  int _id;
-  int _currentNote;
+  byte _numSamples;
+  byte _id;
+  byte _currentNote;
   // BBSample *p_samples; 
   // BBSample *p_currentSample;
 
@@ -76,8 +76,8 @@ private:
 
 // TODO: this description should not belong to the flower class.
 struct FlowerDescription {
-  int id;
-  int numSamples;
+  byte id;
+  byte numSamples;
   SensorDescription sensor;
 };
 

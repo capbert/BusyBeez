@@ -12,25 +12,26 @@ class BBSensor : public ISubject
 {
 public:
 	
-	// enum SensorType {
-	// 	ANALOG, 
-	// 	DIGITAL
-	// };
-
-
-
-
 	enum SensorType {
 		EZ,
 		PIR
 	};
 
 
+/*
+
 	typedef std::multimap<SensorType, BBSensor *> SensorMap;
 	typedef std::pair<SensorType, BBSensor *>SensorMapPair;
 	typedef SensorMap::iterator SensorMapIterator;
 
 	static SensorMap __sensors;
+
+*/
+
+
+
+
+
 
 	// BBSensor();
 	// BBSensor(SensorType);
@@ -39,9 +40,9 @@ public:
 
 
 	static BBSensor *create(SensorDescription);
-	static void updateAll();
-	static void attachType(SensorType, IObserver *);
-	static void detatchType(SensorType, IObserver *);
+	// static void updateAll();
+	// static void attachType(SensorType, IObserver *);
+	// static void detatchType(SensorType, IObserver *);
 	static void syncRead(int pin, int ping); // micros, millis
 	static void start(int);
 	// static void beginConstantLoop(byte RX, byte TX, int ping);
@@ -77,7 +78,7 @@ private:
 	int _readings[DEFAULT_SMOOTHING];
 	// unsigned long _runningTotal;
 	int _rollingAverage;
-	int _currentIndex;
+	byte _currentIndex;
 
 	// int _numReads;
 	// int _lastMillis;

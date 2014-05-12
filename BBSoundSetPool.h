@@ -15,10 +15,10 @@ private:
   // static SetVector _sets;
   BBSoundSet **_sets;
   int _numSets;
-  void shuffle();
 
   int _currentIndex;
 public:
+  void shuffle();
 
   static BBSoundSetPool *getInstance();
 

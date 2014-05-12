@@ -10,18 +10,25 @@
 #include "BBSoundSet.h"
 
 
+static const int NUM_FLOWERS = 6;
+
+
 static const int TRIGGER_PIN = 13;
+static const int SENSOR_REFRESH_RATE = 60 * NUM_FLOWERS;
+
+
+static const int MIN_SET_TRIGGER_TIME = 30000;
+static const int MAX_SET_TRIGGER_TIME = 75000;
 
 // =========================== Sensors ===========================
 
 static const int NUM_ROOM_SENSORS = 3;
 
-static const SensorDescription roomConfig[NUM_ROOM_SENSORS] = {
-  { BBSensor::PIR, 2, {0,1}, {0,1} },
-  { BBSensor::PIR, 3, {0,1}, {0,1} },
-  { BBSensor::PIR, 4, {0,1}, {0,1} }
+static BBSensor *g_RoomSensors[NUM_ROOM_SENSORS] = {
+  BBSensor::create((SensorDescription){ BBSensor::PIR, 2, {0,1}, {0,1} }),
+  BBSensor::create((SensorDescription){ BBSensor::PIR, 3, {0,1}, {0,1} }),
+  BBSensor::create((SensorDescription){ BBSensor::PIR, 4, {0,1}, {0,1} })
 };
-
 
 
 
@@ -38,27 +45,17 @@ static BBRoom g_Room(NUM_AMBIENCE_SAMPLES);
 
 
 
-static const int NUM_FLOWERS = 6;
 
+static BBSensor *g_FlowerSensors[NUM_FLOWERS] = {
 
-static const SensorDescription sConfig[NUM_FLOWERS] ={
-  {BBSensor::EZ, A0, {12,40}, {0,127}},
-  {BBSensor::EZ, A1, {12,60}, {0,127}},
-  {BBSensor::EZ, A2, {12,40}, {0,127}},
-  {BBSensor::EZ, A3, {12,60}, {0,127}},
-  {BBSensor::EZ, A4, {12,60}, {0,127}},
-  {BBSensor::EZ, A5, {12,25}, {0,127}}
+  BBSensor::create((SensorDescription){BBSensor::EZ, A0, {12,144}, {0,127}}),
+  BBSensor::create((SensorDescription){BBSensor::EZ, A1, {12,144}, {0,127}}),
+  BBSensor::create((SensorDescription){BBSensor::EZ, A2, {12,144}, {0,127}}),
+  BBSensor::create((SensorDescription){BBSensor::EZ, A3, {12,144}, {0,127}}),
+  BBSensor::create((SensorDescription){BBSensor::EZ, A4, {12,144}, {0,127}}),
+  BBSensor::create((SensorDescription){BBSensor::EZ, A5, {12,144}, {0,127}})
+
 };
-
-
-// static const FlowerDescription fConfig[NUM_FLOWERS] = {
-//   {0, 2, {BBSensor::EZ, A0, {12,40}, {0,127}}},
-//   {1, 2, {BBSensor::EZ, A1, {12,60}, {0,127}}},
-//   {2, 2, {BBSensor::EZ, A2, {12,40}, {0,127}}},
-//   {3, 2, {BBSensor::EZ, A3, {12,60}, {0,127}}},
-//   {4, 2, {BBSensor::EZ, A4, {12,60}, {0,127}}},
-//   {5, 2, {BBSensor::EZ, A5, {12,25}, {0,127}}},
-// };
 
 
 static BBFlower *g_Flowers[NUM_FLOWERS] = {
@@ -75,38 +72,26 @@ static BBFlower *g_Flowers[NUM_FLOWERS] = {
 
 // =========================== Sound Sets ===========================
 
-static BBSoundSetPool *g_soundSetPool = BBSoundSetPool::getInstance();
 static BBSoundSet* currentSoundSet;
-// static SoundSetDescription setConfig[NUM_SOUNDS_SETS] = {
-//   {7, 0, 9, true},
-//   {7, 9, 6, true},
-//   {7, 15, 6, true},
-//   {8, 0, 5, true},
-//   {8, 5, 5, true},
-//   {8, 10, 5, true},
-//   {8, 15, 4, true},
-//   {8, 19, 4, true},
-//   {8, 23, 4, true},
-//   {8, 27, 4, true},
-//   {8, 31, 5, true},
-//   {10, 0, 4, true},
-// };
+static BBSoundSetPool *g_soundSetPool = BBSoundSetPool::getInstance();
 
 
-static const int NUM_SOUNDS_SETS = 12;
+static const int NUM_SOUNDS_SETS = 11;
 static BBSoundSet *g_soundSets[NUM_SOUNDS_SETS]={
   new BBSoundSet(7, 0, 9, true),
   new BBSoundSet(7, 9, 6, true),
   new BBSoundSet(7, 15, 6, true),
-  new BBSoundSet(8, 0, 5, true),
-  new BBSoundSet(8, 5, 5, true),
-  new BBSoundSet(8, 10, 5, true),
-  new BBSoundSet(8, 15, 4, true),
-  new BBSoundSet(8, 19, 4, true),
-  new BBSoundSet(8, 23, 4, true),
-  new BBSoundSet(8, 27, 4, true),
-  new BBSoundSet(8, 31, 5, true),
-  new BBSoundSet(10, 0, 4, true)
+  
+  new BBSoundSet(8, 0, 8, true),
+  new BBSoundSet(8, 8, 7, true),
+  new BBSoundSet(8, 15, 10, true),
+  new BBSoundSet(8, 25, 11, true),
+
+  new BBSoundSet(9, 0, 8, true),
+  new BBSoundSet(9, 8, 8, true),
+
+  new BBSoundSet(10, 0, 8, true),
+  new BBSoundSet(10, 8, 8, true)
 };
 
 // static const int NUM_SOUNDS_SETS = 2;

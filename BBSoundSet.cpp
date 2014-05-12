@@ -6,7 +6,7 @@
 #include <MIDI.h>
 #include "BBSensor.h"
 
-BBSoundSet::BBSoundSet(int channel, int startNote, int numSounds, bool shuffle ):
+BBSoundSet::BBSoundSet(byte channel, byte startNote, byte numSounds, bool shuffle ):
 _channel(channel),
 _startNote(startNote),
 _numSounds(numSounds),
@@ -17,90 +17,51 @@ _shuffle(shuffle)
 }
 
 void BBSoundSet::update(ISubject *subject){
-// LOGS("-------update");
-
-/*
-
-when triggertime expires 
-  reset triggertime
-  start capturing sensor readings
-when capture period expires 
-  do something with the values
-  trigger sample
+LOGS("-------update");
 
 
-  _
+  // if(_captureReadings){
+  //   // LOGS("-- capture --");
+  //   // LOG(_numReadings);
+    // int sensorValue = ((BBSensor*)subject)->read();
+    // _runningTotal += sensorValue;
+    // _numReadings++;
 
-
-*/
-  if(_captureReadings){
-    // LOGS("-- capture --");
-    // LOG(_numReadings);
-    int sensorValue = ((BBSensor*)subject)->read();
-    _runningTotal += sensorValue;
-    _numReadings++;
-
-    if(_numReadings == 7){
+    // if(_numReadings == 7){
       // LOGS("--- END CAPTURE ---");
-      _captureReadings = false;
-      _numReadings = 0;
-      _runningTotal = 0;
+      // _captureReadings = false;
+      // _numReadings = 0;
+      // _runningTotal = 0;
 
-      int x = rand()%128;
-      int y = rand()%128;
+      // int x = rand()%128;
+      // int y = rand()%128;
       
-      int average = _runningTotal / (_numReadings - 1); //TODO: fix this -1
+      // int average = _runningTotal / (_numReadings - 1); //TODO: fix this -1
 
-      // _runningTotal = 0; // TODO: reset totalm
-      // _numReadings =0;
-      resetTriggerTime();
-      triggerSound(_currentIndex + _startNote);
-      setAmbience(average);
-      pan3D(x,y);
+      // // _runningTotal = 0; // TODO: reset totalm
+      // // _numReadings =0;
+      // resetTriggerTime();
+      // triggerSound(_currentIndex + _startNote);
+      // setAmbience(average);
+      // pan3D(x,y);
       
-      _currentIndex ++;
+      // _currentIndex ++;
 
-      if(_currentIndex == _numSounds){
-        _currentIndex = 0;
-        _done = true;
-      } 
-
-
-    }
-  }
-  int shouldTrigger = millis() % _triggerTime;
-  if(shouldTrigger < 50 ){ 
-    // LOGS("--- BEGIN CAPTURE ---");
-    // LOG(shouldTrigger);
-    _captureReadings = true;
-  // TODO: 110 is a slop value and is tied to the refresh rate. not sure what to do about this. be careful.
+      // if(_currentIndex == _numSounds){
+      //   _currentIndex = 0;
+      //   _done = true;
+      // } 
 
 
-    // int avg = _runningTotal/_numReadings;
+    // }
+  // }
+  // int shouldTrigger = millis() % _triggerTime;
+  // if(shouldTrigger < 50 ){ 
+  //   // LOGS("--- BEGIN CAPTURE ---");
+  //   // LOG(shouldTrigger);
+  //   _captureReadings = true;
 
-    // // int sensorValue = avg;
-    // int sensorValue = 64;
-    // // int triggerNote = rand() % _numSounds;
-    // int x = rand()%128;
-    // int y = rand()%128;
-    
-
-
-    // // _runningTotal = 0; // TODO: reset totalm
-    // // _numReadings =0;
-    // resetTriggerTime();
-    // triggerSound(_currentIndex + _startNote);
-    // setAmbience(sensorValue);
-    // pan3D(x,y);
-    
-    // _currentIndex ++;
-
-    // if(_currentIndex == _numSounds){
-    //   _currentIndex = 0;
-    //   _done = true;
-    // } 
-
-  }
+  // }
 }
 
 
@@ -108,16 +69,16 @@ when capture period expires
 
 
 
-void BBSoundSet::resetTriggerTime(){
-  _triggerTime = rand() % (MAX_TRIGGER_TIME - MIN_TRIGGER_TIME) + MIN_TRIGGER_TIME;
+// void BBSoundSet::resetTriggerTime(){
+//   _triggerTime = rand() % (MAX_TRIGGER_TIME - MIN_TRIGGER_TIME) + MIN_TRIGGER_TIME;
 
-}
+// }
 
 void BBSoundSet::reset(){
-  resetTriggerTime();
-  _captureReadings = false;
-  _runningTotal = 0;
-  _numReadings =0;
+  // resetTriggerTime();
+  // _captureReadings = false;
+  // _runningTotal = 0;
+  // _numReadings =0;
   _currentIndex = 0;
   _done = false;
 }
@@ -146,6 +107,55 @@ bool BBSoundSet::done(){
 //   std::random_shuffle(vec->begin(), vec->end()+1); // shuffle STL containerstd
 // }
 
+void BBSoundSet::triggerClip(bool fade){
+  
+  // _captureReadings = false;
+  // _numReadings = 0;
+  // _runningTotal = 0;
+
+  byte x = rand()%128;
+  byte y = rand()%128;
+  byte amb = rand()%128;
+  // int average = _runningTotal / (_numReadings - 1); //TODO: fix this -1
+
+  // _runningTotal = 0; // TODO: reset totalm
+  // _numReadings =0;
+  // resetTriggerTime();
+
+  fade ? triggerFadeIn() : triggerUnityGain();
+  triggerSound(_currentIndex + _startNote);
+  setAmbience(amb);
+  pan3D(x,y);
+  
+  _currentIndex ++;
+
+  if(_currentIndex == _numSounds){
+    _currentIndex = 0;
+    _done = true;
+  } 
+
+}
+
+void BBSoundSet::stopClip(bool fade){
+  LOGS("BBSoundSet::stopClip");
+  triggerFadeOut();
+}
+
+void BBSoundSet::triggerFadeIn(){
+   LOGS("BBSoundSet::triggerFadeIn");
+  MIDI.sendNoteOn(MIDI_FADE_IN_NOTE, 127, _channel);
+}
+
+void BBSoundSet::triggerFadeOut(){
+  LOGS("BBSoundSet::triggerFadeOut");
+  MIDI.sendNoteOn(MIDI_FADE_OUT_NOTE, 127, _channel);
+}
+
+void BBSoundSet::triggerUnityGain(){
+   LOGS("BBSoundSet::triggerUnityGain");
+  MIDI.sendNoteOn(MIDI_UNITY_NOTE, 127, _channel);
+}
+
 void BBSoundSet::triggerSound(int note){
   LOGS("BBSoundSet::triggerSound()");
   LOG(note);
@@ -154,7 +164,13 @@ void BBSoundSet::triggerSound(int note){
 
 }
 
-
+void BBSoundSet::print(){
+  LOGS("----------------------------");
+  LOG(_channel);
+  LOG(_startNote);
+  LOG(_numSounds);
+  LOGS("----------------------------");
+}
 // TODO: this should be abstracted
 void BBSoundSet::pan3D(int x, int y){
   MIDI.sendControlChange(0, x, MIDI_PAN_CHANNEL); // send X
@@ -163,6 +179,6 @@ void BBSoundSet::pan3D(int x, int y){
 }
 
 void BBSoundSet::setAmbience(int val){
-  MIDI.sendControlChange(2,val,_channel);
+  MIDI.sendControlChange(MIDI_AMBIENCE_NOTE,val,_channel);
   LOGS("BBSoundSet::setAmbience()");
 }
