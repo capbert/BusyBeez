@@ -20,7 +20,9 @@
 
 
 static SimpleTimer timer;
-static int setTimerID;
+static int soundSetTimer;
+static int miscSoundTimer;
+static int _currentMiscSoundNote;
 
 void setup(){
 
@@ -33,7 +35,8 @@ void setup(){
   LOGS("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 
 
-
+LOG(MAX_SET_TRIGGER_TIME);
+LOG(MIN_MISC_SOUND_TRIGGER_TIME);
 
 
   LOG(freeMemory());  
@@ -41,20 +44,29 @@ void setup(){
 
   BBSensor::start(TRIGGER_PIN);
 
-  configureRoom();
-  configureFlowers();
+  // configureRoom();
+  // configureFlowers();
 
 
 
-  g_soundSetPool->setPool(g_soundSets, NUM_SOUNDS_SETS);
-  // currentSoundSet = g_soundSetPool->getSet();
-
+  g_soundSetPool->setPool(g_soundSets, NUM_SOUNDS_SETS); 
   getNewSoundSet();
 
 
+  // launch continuous timer to sync US sensor read cycle 
   timer.setInterval(SENSOR_REFRESH_RATE, triggerSensorSync);
   
-  // activateSoundSets();
+  
+
+
+
+
+
+
+  // TODO : remove!!!
+  activateSoundSets();
+  activateSounds();
+
 
 
 
@@ -123,9 +135,11 @@ void onRoomStateChangeCallback(BBRoom::RoomState state){
   if(state == BBRoom::ROOM_STATE_ACTIVE){
     activateFlowers();
     activateSoundSets();
+    activateSounds();
   }else{
     deactivateFlowers();
     deactivateSoundSets();
+    deactivateSounds();
   }
 }
 
@@ -168,10 +182,21 @@ void configureFlowers(){
 
 
 
+/*
+  Sound Sets
+*/
+
+void getNewSoundSet(){
+  LOGS("----- GET NEW SOUND SET -----"); 
+  // deactivateSoundSets();
+  currentSoundSet = g_soundSetPool->getSet();
+  // activateSoundSets();
+}
+
 void activateSoundSets(){
 
     // BBSensor::attachType(BBSensor::PIR, currentSoundSet);
-  setTimerID = timer.setTimeout(getSoundSetTriggerTime(), triggerSoundSetClip);
+  soundSetTimer = timer.setTimeout(getSoundSetTriggerTime(), triggerSoundSetClip);
   // for(int i=0; i<NUM_FLOWERS; i++){
   //   g_FlowerSensors[i]->attach(currentSoundSet);
   // }
@@ -185,56 +210,98 @@ void deactivateSoundSets(){
   //   g_FlowerSensors[i]->detatch(currentSoundSet);
   // }
   stopSoundSetClip();
-  timer.deleteTimer(setTimerID);
+  timer.deleteTimer(soundSetTimer);
 }
 
-void getNewSoundSet(){
-  LOGS("----- GET NEW SOUND SET -----");
-  // deactivateSoundSets();
+void triggerSoundSetClip(){  
 
-
-
-  currentSoundSet = g_soundSetPool->getSet();
-
-  currentSoundSet->print();
-  // activateSoundSets();
-}
-
-// void startSoundSet(){
-//   LOGS("startSoundSet");
-
-//   // LOG(freeMemory());
-//   activateSoundSets();
-//   timer.setTimeout(1000, triggerSoundSetClip);
-// }
-
-
-
-void triggerSoundSetClip(){
-  LOGS("triggerSoundSetClip");
   // deactivateSoundSets();
   currentSoundSet->stopClip(false);
 
   if (currentSoundSet->done()) getNewSoundSet();
 
   currentSoundSet->triggerClip(false);
-  setTimerID = timer.setTimeout(getSoundSetTriggerTime(), stopSoundSetClip);
+  soundSetTimer = timer.setTimeout(getSoundSetTriggerTime(), stopSoundSetClip);
 }
 
 void stopSoundSetClip(){
+
   currentSoundSet->stopClip(true);
-  setTimerID = timer.setTimeout(6500, triggerSoundSetClip);
+  soundSetTimer = timer.setTimeout(FADE_TIME, triggerSoundSetClip);
 }
 
-// void startSoundSetClip(){}
-
-int getSoundSetTriggerTime(){
+unsigned int getSoundSetTriggerTime(){
   return getTriggerTime(MIN_SET_TRIGGER_TIME, MAX_SET_TRIGGER_TIME);
 }
 
-int getTriggerTime(int min, int max){
+unsigned int getMiscSoundTriggerTime(){
+  return getTriggerTime(MIN_MISC_SOUND_TRIGGER_TIME, MAX_MISC_SOUND_TRIGGER_TIME);
+}
+
+unsigned int getTriggerTime(int min, int max){
   return rand() % (max - min) + min;
 }
+
+
+/*
+  Misc Sounds
+*/
+void activateSounds(){
+  LOGS("Activate Sounds");
+  miscSoundTimer = timer.setTimeout(getMiscSoundTriggerTime(), triggerMiscSoundClip);
+}
+
+void deactivateSounds(){
+  LOGS("Deactivate Sounds");
+  stopMiscSoundClip();
+  timer.deleteTimer(miscSoundTimer);
+}
+
+void triggerMiscSoundClip(){
+  // LOGS("trigger misc sound");
+
+  MIDI.sendNoteOn(_currentMiscSoundNote, 0, 11); // trigger off to previous notes
+
+  int randomness = rand() % 10;
+
+  // LOG(randomness);
+  LOGS ("--------------------------------");
+  switch(randomness){
+    case 0:
+
+      LOGS("  trigger flight of bb");
+      _currentMiscSoundNote = 1;
+      break;
+    default:
+      LOGS("  trigger bee");
+      _currentMiscSoundNote = 0;
+      break;
+  }
+
+
+  // TODO: Centralize MIDI calls
+  MIDI.sendNoteOn(123, 127, 11); // unity
+  MIDI.sendNoteOn(_currentMiscSoundNote, 127, 11); // trigger
+
+  // int timeout = getTriggerTime(FADE_TIME, MAX_MISC_SOUND_TIMEOUT);
+  miscSoundTimer = timer.setTimeout(getMiscSoundTriggerTime(), stopMiscSoundClip);
+}
+
+void stopMiscSoundClip(){
+  LOGS ("--------------------------------");
+  LOGS("  stop misc sound");
+  MIDI.sendNoteOn(125, 127, 11); // fade out
+  int timeout = getTriggerTime(FADE_TIME, MAX_MISC_SOUND_TIMEOUT);
+  miscSoundTimer = timer.setTimeout(timeout, triggerMiscSoundClip);
+}
+
+
+
+
+
+
+
+
 
 
 

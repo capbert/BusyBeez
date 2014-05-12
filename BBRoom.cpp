@@ -35,17 +35,6 @@ void BBRoom::update(ISubject *subject){
     if (sensorValue < 0){
     // only allow room to deactivate after min time... 
 
-
-      static bool beeTriggered;
-      static long beeTimer = 10000;
-
-      if(millis() % beeTimer < 110){
-        if(!beeTriggered){
-          beeTriggered = true;
-          MIDI.sendNoteOn(0, 127, 11);
-        }
-      }
-
       updateTimeout();
     }else{
       resetTimeout();

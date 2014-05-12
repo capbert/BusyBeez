@@ -17,8 +17,15 @@ static const int TRIGGER_PIN = 13;
 static const int SENSOR_REFRESH_RATE = 60 * NUM_FLOWERS;
 
 
-static const int MIN_SET_TRIGGER_TIME = 30000;
-static const int MAX_SET_TRIGGER_TIME = 75000;
+static const unsigned int MIN_SET_TRIGGER_TIME = 30000;
+static const unsigned int MAX_SET_TRIGGER_TIME = 65000;
+
+static const unsigned int MIN_MISC_SOUND_TRIGGER_TIME = 15000;
+static const unsigned int MAX_MISC_SOUND_TRIGGER_TIME = 65000;
+
+static const unsigned int MAX_MISC_SOUND_TIMEOUT = 20000;
+static const int FADE_TIME = 2500;
+
 
 // =========================== Sensors ===========================
 

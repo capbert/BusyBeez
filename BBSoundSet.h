@@ -27,6 +27,7 @@ private:
   bool _shuffle;
 
   byte _currentIndex;
+  byte _currentNote;
   // byte _triggerTime;
   bool _done;
 
@@ -42,6 +43,7 @@ private:
   void triggerFadeIn();
   void triggerFadeOut();
   void triggerUnityGain();
+  void triggerSoundOff();
 public:
 
   BBSoundSet(byte channel, byte startNote, byte numSounds, bool shuffle );

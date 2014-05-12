@@ -53,13 +53,13 @@ public:
     void run();
 
     // call function f every d milliseconds
-    int setInterval(long d, timer_callback f);
+    unsigned int setInterval(long d, timer_callback f);
 
     // call function f once after d milliseconds
-    int setTimeout(long d, timer_callback f);
+    unsigned int setTimeout(long d, timer_callback f);
 
     // call function f every d milliseconds for n times
-    int setTimer(long d, timer_callback f, int n);
+    unsigned int setTimer(long d, timer_callback f, int n);
 
     // destroy the specified timer
     void deleteTimer(int numTimer);

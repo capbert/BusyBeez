@@ -69,8 +69,8 @@ BBSoundSet *BBSoundSetPool::getSet(){
   LOGS("BBSoundSetPool::getSet()");
   LOG(_currentIndex);
   LOG(_numSets);
-    LOGS("-------------- RESET SET POOL --------------");
   if( _currentIndex == _numSets){
+    LOGS("-------------- RESET SET POOL --------------");
     shuffle();
     _currentIndex = 0;
   }

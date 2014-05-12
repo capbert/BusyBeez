@@ -131,7 +131,7 @@ int SimpleTimer::findFirstFreeSlot() {
 }
 
 
-int SimpleTimer::setTimer(long d, timer_callback f, int n) {
+unsigned int SimpleTimer::setTimer(long d, timer_callback f, int n) {
     int freeTimer;
 
     freeTimer = findFirstFreeSlot();
@@ -155,12 +155,12 @@ int SimpleTimer::setTimer(long d, timer_callback f, int n) {
 }
 
 
-int SimpleTimer::setInterval(long d, timer_callback f) {
+unsigned int SimpleTimer::setInterval(long d, timer_callback f) {
     return setTimer(d, f, RUN_FOREVER);
 }
 
 
-int SimpleTimer::setTimeout(long d, timer_callback f) {
+unsigned int SimpleTimer::setTimeout(long d, timer_callback f) {
     return setTimer(d, f, RUN_ONCE);
 }
 
