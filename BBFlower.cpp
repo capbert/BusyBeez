@@ -61,17 +61,25 @@ void BBFlower::triggerSample(){
   LOGS("BBFlower::trigger sample");
   _currentNote = rand() % _numSamples;
   MIDI.sendNoteOn(_currentNote, 127, _id+1); // TODO: channels start at 1
+  MIDI.sendNoteOn(123, 127, _id+1); // set unity gain
   // p_currentSample = getRandomSample(); 
   // p_currentSample->assignToOutput(_speakerOutputID);
   // p_currentSample->triggerOn();
 
 }
 
-void BBFlower::stopSample(){
+void BBFlower::stopSample(bool fade){
   if(getState() == FLOWER_STATE_INACTIVE) return; // don't do anything if nothing is triggered
 
   LOGS("BBFlower::stop sample");
-  MIDI.sendNoteOn(_currentNote, 0, _id+1);
+
+  if(fade){
+    LOGS("  with fade");
+    MIDI.sendNoteOn(125, 127, _id+1);
+  }else{
+    LOGS("  without fade");
+    MIDI.sendNoteOn(_currentNote, 0, _id+1);
+  }
   // p_currentSample->triggerOff();
 
 }
@@ -80,11 +88,9 @@ void BBFlower::update(ISubject *subject){
     // LOGS("--------updateing BBFlower--------");
 
     int sensorValue = ((BBSensor*)subject)->read();
-    // LOG(sensorValue);
-    // Serial.println(sensorValue);
     FlowerState state = getState();
 
-    if ( state == FLOWER_STATE_ACTIVE ){
+    if ( state == FLOWER_STATE_ACTIVE || state == FLOWER_STATE_FADEOUT ){
       // LOG("active");
       if (sensorValue < 0){
       
@@ -103,13 +109,34 @@ void BBFlower::update(ISubject *subject){
 
     }
 
+   /* 
+   DEGUG
+
+
+   if (getState()== FLOWER_STATE_INACTIVE){
+      setState(FLOWER_STATE_ACTIVE);
+    }
+
+    updateTimeout();
+
+    */
 
 }
 
 void BBFlower::handleTimeout(){
-  resetTimeout();
-  stopSample();  
-  setState(FLOWER_STATE_INACTIVE);
+  if(getState() == FLOWER_STATE_ACTIVE){
+    LOGS("handle INITIAL timeout");
+    setTimeout(FADE_OUT_TIME);
+    stopSample(true);  
+    setState(FLOWER_STATE_FADEOUT);
+    
+    
+  }else{
+    LOGS("handle FADE timeout");
+    stopSample();
+    setState(FLOWER_STATE_INACTIVE);
+    setTimeout(DEFAULT_TIMEOUT);
+  }
 }
 
 

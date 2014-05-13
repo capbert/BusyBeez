@@ -17,6 +17,7 @@ void ITimeout::updateTimeout(){
 
 void ITimeout::setTimeout(int timeout){
   _timeout = timeout;
+  resetTimeout();
 }
 
 bool ITimeout::timeoutHasExpired(){

@@ -24,6 +24,7 @@ public:
   typedef enum{
     FLOWER_STATE_ACTIVE,
     FLOWER_STATE_INACTIVE,
+    FLOWER_STATE_FADEOUT,
     FLOWER_STATE_DISABLED
   } FlowerState;
 
@@ -36,7 +37,7 @@ public:
 
   // // TODO: refactor names triggerOn, triggerOff
   void triggerSample();
-  void stopSample();
+  void stopSample(bool=false);
 
   // // void setSamples(BBSample *, int numSamples);
 
@@ -52,6 +53,7 @@ public:
   void setState(FlowerState);
 
 private:
+  static const int FADE_OUT_TIME = 2250;
   static const int DEFAULT_TIMEOUT = 5000;
 
 
