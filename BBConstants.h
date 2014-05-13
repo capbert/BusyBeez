@@ -17,23 +17,33 @@ static const int TRIGGER_PIN = 13;
 static const int SENSOR_REFRESH_RATE = 60 * NUM_FLOWERS;
 
 
-static const unsigned int MIN_SET_TRIGGER_TIME = 30000;
-static const unsigned int MAX_SET_TRIGGER_TIME = 65000;
 
-static const unsigned int MIN_MISC_SOUND_TRIGGER_TIME = 15000;
-static const unsigned int MAX_MISC_SOUND_TRIGGER_TIME = 65000;
+#ifdef DEBUG 
 
-static const unsigned int MAX_MISC_SOUND_TIMEOUT = 20000;
-static const int FADE_TIME = 2500;
+  static const unsigned int MIN_SET_TRIGGER_TIME = 2000;
+  static const unsigned int MAX_SET_TRIGGER_TIME = 4000;
 
-// static const unsigned int MIN_SET_TRIGGER_TIME = 2000;
-// static const unsigned int MAX_SET_TRIGGER_TIME = 400;
+  static const unsigned int MIN_MISC_SOUND_TRIGGER_TIME = 2000;
+  static const unsigned int MAX_MISC_SOUND_TRIGGER_TIME = 4000;
 
-// static const unsigned int MIN_MISC_SOUND_TRIGGER_TIME = 2000;
-// static const unsigned int MAX_MISC_SOUND_TRIGGER_TIME = 4000;
+  static const unsigned int MAX_MISC_SOUND_TIMEOUT = 1000;
+  static const int FADE_TIME = 250;
+  
+#else
 
-// static const unsigned int MAX_MISC_SOUND_TIMEOUT = 1000;
-// static const int FADE_TIME = 250;
+  static const unsigned int MIN_SET_TRIGGER_TIME = 30000;
+  static const unsigned int MAX_SET_TRIGGER_TIME = 65000;
+
+  static const unsigned int MIN_MISC_SOUND_TRIGGER_TIME = 15000;
+  static const unsigned int MAX_MISC_SOUND_TRIGGER_TIME = 65000;
+
+  static const unsigned int MAX_MISC_SOUND_TIMEOUT = 20000;
+  static const int FADE_TIME = 2500;
+
+#endif
+
+
+
 
 // =========================== Sensors ===========================
 
@@ -75,12 +85,12 @@ static BBSensor *g_FlowerSensors[NUM_FLOWERS] = {
 
 static BBFlower *g_Flowers[NUM_FLOWERS] = {
 
-  new BBFlower(0, 7),
-  new BBFlower(1, 7),
-  new BBFlower(2, 7),
-  new BBFlower(3, 7),
-  new BBFlower(4, 7),
-  new BBFlower(5, 7)
+  new BBFlower(0, 8),
+  new BBFlower(1, 8),
+  new BBFlower(2, 8),
+  new BBFlower(3, 8),
+  new BBFlower(4, 8),
+  new BBFlower(5, 8)
 
 };
 
@@ -93,21 +103,22 @@ static BBSoundSetPool *g_soundSetPool = BBSoundSetPool::getInstance();
 
 static const int NUM_SOUNDS_SETS = 12;
 static BBSoundSet *g_soundSets[NUM_SOUNDS_SETS]={
-  new BBSoundSet(7, 0, 5, true),
-  new BBSoundSet(7, 5, 5, true),
   
-  new BBSoundSet(8, 0, 5, true),
-  new BBSoundSet(8, 5, 5, true),
+  new BBSoundSet(7, 0, 5, true), // Vivaldi
+  new BBSoundSet(7, 5, 5, true), // Copland
 
-  new BBSoundSet(9, 0, 4, true),
-  new BBSoundSet(9, 4, 4, true),
-  new BBSoundSet(9, 8, 4, true),
-  new BBSoundSet(9, 12, 4, true),
+  new BBSoundSet(8, 0, 5, true), // Mahler
+  new BBSoundSet(8, 5, 5, true), // Stravinsky
 
-  new BBSoundSet(10, 0, 4, true),
-  new BBSoundSet(10, 4, 4, true),
-  new BBSoundSet(10, 8, 4, true),
-  new BBSoundSet(10, 12, 4, true)
+  new BBSoundSet(9, 0, 3, true),
+  new BBSoundSet(9, 3, 3, true),
+  new BBSoundSet(9, 6, 3, true),
+  new BBSoundSet(9, 9, 3, true),
+
+  new BBSoundSet(10, 0, 3, true),
+  new BBSoundSet(10, 3, 3, true),
+  new BBSoundSet(10, 6, 3, true),
+  new BBSoundSet(10, 9, 3, true)
 };
 
 // static const int NUM_SOUNDS_SETS = 2;
