@@ -25,6 +25,9 @@ static int miscSoundTimer;
 static int _currentMiscSoundNote;
 
 void setup(){
+  
+  srand(analogRead(0) - analogRead(1) + analogRead(5) * analogRead(3));
+  
 
   MIDI.begin(115200);
   Serial.begin(115200);
@@ -57,7 +60,6 @@ LOG(MIN_MISC_SOUND_TRIGGER_TIME);
   timer.setInterval(SENSOR_REFRESH_RATE, triggerSensorSync);
   
   
-
 
 
 

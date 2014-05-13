@@ -37,6 +37,7 @@ BBSoundSetPool::BBSoundSetPool(){
 void BBSoundSetPool::setPool(BBSoundSet *(sets[]), int count){
   _sets = sets;
   _numSets = count;
+  srand(analogRead(0) * analogRead(1) - analogRead(2));
   shuffle();
   LOGS("BBSoundSetPool::setPool()");
   // LOG(_numSets);
@@ -57,6 +58,7 @@ void BBSoundSetPool::setPool(BBSoundSet *(sets[]), int count){
 
 void BBSoundSetPool::shuffle(){
   // LOGS("BBSoundSet::shuffle");
+  
   std::random_shuffle(_sets, _sets + _numSets); // shuffle STL containerstd
 
 }

@@ -13,6 +13,7 @@ _numSounds(numSounds),
 _shuffle(shuffle)
 {
   // createPlaylist(_numSounds);
+  srand(analogRead(2) * analogRead(3) / analogRead(4));
   reset();
 }
 
