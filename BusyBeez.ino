@@ -66,9 +66,13 @@ LOG(MIN_MISC_SOUND_TRIGGER_TIME);
   // TODO : DEBUG remove!!!
   // activateSoundSets();
   // activateSounds();
+  // activateFlowers();
+  // deactivateFlowers();
+
+  // testDeactivate();
 
 
-
+  // timer.setInterval(10000, testDeactivate);
 
 }
 
@@ -108,11 +112,11 @@ void updateSensors(){
 
 
 void activateFlowers(){
-  // LOGS("--- activate flowers ---");
+  LOGS("--- activate flowers ---");
   for(int i = 0; i< NUM_FLOWERS; i++){
     g_Flowers[i]->enable();
     // g_FlowersVector[i]->enable();
-    // g_FlowerSensors[i]->attach(&g_Room);
+    g_FlowerSensors[i]->attach(&g_Room);
     // g_FlowerSensorVector[i]->attach(&g_Room);
   }
 
@@ -120,11 +124,11 @@ void activateFlowers(){
 }
 
 void deactivateFlowers(){
-  // LOGS("--- deactivate flowers ---");
+  LOGS("--- deactivate flowers ---");
   for(int i = 0; i< NUM_FLOWERS; i++){
     g_Flowers[i]->disable();
     // g_FlowersVector[i]->disable();
-    // g_FlowerSensors[i]->detatch(&g_Room);
+    g_FlowerSensors[i]->detatch(&g_Room);
     // g_FlowerSensorVector[i]->detatch(&g_Room);
   }
   // BBSensor::detatchType(BBSensor::EZ, &g_Room);
@@ -133,10 +137,12 @@ void deactivateFlowers(){
 
 void onRoomStateChangeCallback(BBRoom::RoomState state){
   if(state == BBRoom::ROOM_STATE_ACTIVE){
+    
     activateFlowers();
     activateSoundSets();
     activateSounds();
   }else{
+
     deactivateFlowers();
     deactivateSoundSets();
     deactivateSounds();
@@ -210,13 +216,19 @@ void deactivateSoundSets(){
   //   g_FlowerSensors[i]->detatch(currentSoundSet);
   // }
   stopSoundSetClip();
-  timer.deleteTimer(soundSetTimer);
+
+  // timer.disable(soundSetTimer);
+  // timer.deleteTimer(soundSetTimer);
 }
 
 void triggerSoundSetClip(){  
 
   // deactivateSoundSets();
+  
+
   currentSoundSet->stopClip(false);
+
+  if(g_Room.getState() == BBRoom::ROOM_STATE_INACTIVE) return;
 
   if (currentSoundSet->done()) getNewSoundSet();
 
@@ -227,6 +239,7 @@ void triggerSoundSetClip(){
 void stopSoundSetClip(){
 
   currentSoundSet->stopClip(true);
+  if(g_Room.getState() == BBRoom::ROOM_STATE_INACTIVE) return;
   soundSetTimer = timer.setTimeout(FADE_TIME, triggerSoundSetClip);
 }
 
@@ -248,26 +261,33 @@ unsigned int getTriggerTime(int min, int max){
 */
 void activateSounds(){
   LOGS("Activate Sounds");
+  LOG(g_Room.getState());
   miscSoundTimer = timer.setTimeout(getMiscSoundTriggerTime(), triggerMiscSoundClip);
 }
 
 void deactivateSounds(){
   LOGS("Deactivate Sounds");
   stopMiscSoundClip();
-  timer.deleteTimer(miscSoundTimer);
+  // timer.disable(miscSoundTimer);
+  // timer.deleteTimer(miscSoundTimer);
 }
 
 void triggerMiscSoundClip(){
   // LOGS("trigger misc sound");
 
   MIDI.sendNoteOn(_currentMiscSoundNote, 0, 11); // trigger off to previous notes
-
+  if(g_Room.getState() == BBRoom::ROOM_STATE_INACTIVE) return;
   int randomness = rand() % 10;
 
   // LOG(randomness);
   LOGS ("--------------------------------");
   switch(randomness){
     case 0:
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
 
       LOGS("  trigger flight of bb");
       _currentMiscSoundNote = 1;
@@ -291,6 +311,9 @@ void stopMiscSoundClip(){
   LOGS ("--------------------------------");
   LOGS("  stop misc sound");
   MIDI.sendNoteOn(125, 127, 11); // fade out
+  
+  if(g_Room.getState() == BBRoom::ROOM_STATE_INACTIVE) return;
+
   int timeout = getTriggerTime(FADE_TIME, MAX_MISC_SOUND_TIMEOUT);
   miscSoundTimer = timer.setTimeout(timeout, triggerMiscSoundClip);
 }
@@ -298,8 +321,18 @@ void stopMiscSoundClip(){
 
 
 
-
-
+ 
+void testDeactivate(){
+  static int toggle = 0;
+  if(toggle %2 == 1){
+      g_Room.setState(BBRoom::ROOM_STATE_ACTIVE);
+      // onRoomStateChangeCallback(BBRoom::ROOM_STATE_ACTIVE);
+    }else{
+      g_Room.setState(BBRoom::ROOM_STATE_INACTIVE);
+      // onRoomStateChangeCallback(BBRoom::ROOM_STATE_INACTIVE);
+    } 
+  toggle ++;
+}
 
 
 
