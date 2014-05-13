@@ -26,6 +26,14 @@ static const unsigned int MAX_MISC_SOUND_TRIGGER_TIME = 65000;
 static const unsigned int MAX_MISC_SOUND_TIMEOUT = 20000;
 static const int FADE_TIME = 2500;
 
+// static const unsigned int MIN_SET_TRIGGER_TIME = 2000;
+// static const unsigned int MAX_SET_TRIGGER_TIME = 400;
+
+// static const unsigned int MIN_MISC_SOUND_TRIGGER_TIME = 2000;
+// static const unsigned int MAX_MISC_SOUND_TRIGGER_TIME = 4000;
+
+// static const unsigned int MAX_MISC_SOUND_TIMEOUT = 1000;
+// static const int FADE_TIME = 250;
 
 // =========================== Sensors ===========================
 
@@ -60,7 +68,7 @@ static BBSensor *g_FlowerSensors[NUM_FLOWERS] = {
   BBSensor::create((SensorDescription){BBSensor::EZ, A2, {12,144}, {0,127}}),
   BBSensor::create((SensorDescription){BBSensor::EZ, A3, {12,144}, {0,127}}),
   BBSensor::create((SensorDescription){BBSensor::EZ, A4, {12,144}, {0,127}}),
-  BBSensor::create((SensorDescription){BBSensor::EZ, A5, {12,144}, {0,127}})
+  BBSensor::create((SensorDescription){BBSensor::EZ, A5, {12,120}, {0,127}})
 
 };
 
@@ -83,22 +91,23 @@ static BBSoundSet* currentSoundSet;
 static BBSoundSetPool *g_soundSetPool = BBSoundSetPool::getInstance();
 
 
-static const int NUM_SOUNDS_SETS = 11;
+static const int NUM_SOUNDS_SETS = 12;
 static BBSoundSet *g_soundSets[NUM_SOUNDS_SETS]={
-  new BBSoundSet(7, 0, 9, true),
-  new BBSoundSet(7, 9, 6, true),
-  new BBSoundSet(7, 15, 6, true),
+  new BBSoundSet(7, 0, 5, true),
+  new BBSoundSet(7, 5, 5, true),
   
-  new BBSoundSet(8, 0, 8, true),
-  new BBSoundSet(8, 8, 7, true),
-  new BBSoundSet(8, 15, 10, true),
-  new BBSoundSet(8, 25, 11, true),
+  new BBSoundSet(8, 0, 5, true),
+  new BBSoundSet(8, 5, 5, true),
 
-  new BBSoundSet(9, 0, 8, true),
-  new BBSoundSet(9, 8, 8, true),
+  new BBSoundSet(9, 0, 4, true),
+  new BBSoundSet(9, 4, 4, true),
+  new BBSoundSet(9, 8, 4, true),
+  new BBSoundSet(9, 12, 4, true),
 
-  new BBSoundSet(10, 0, 8, true),
-  new BBSoundSet(10, 8, 8, true)
+  new BBSoundSet(10, 0, 4, true),
+  new BBSoundSet(10, 4, 4, true),
+  new BBSoundSet(10, 8, 4, true),
+  new BBSoundSet(10, 12, 4, true)
 };
 
 // static const int NUM_SOUNDS_SETS = 2;
