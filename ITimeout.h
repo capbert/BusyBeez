@@ -4,10 +4,10 @@
 class ITimeout
 {
 public:
-  void setTimeout(int);
+  void setTimeout( unsigned int );
 
 protected:
-  int _timeout;
+  unsigned int _timeout;
   bool timeoutHasExpired();
   void updateTimeout();
   virtual void handleTimeout();

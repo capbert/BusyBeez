@@ -15,7 +15,7 @@ void ITimeout::updateTimeout(){
 
 }
 
-void ITimeout::setTimeout(int timeout){
+void ITimeout::setTimeout(unsigned int timeout){
   _timeout = timeout;
   resetTimeout();
 }

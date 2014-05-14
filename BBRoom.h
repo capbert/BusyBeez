@@ -31,7 +31,7 @@ public:
   void setStateChangeCallback(RoomUpdateCallback);
 
 private:
-  static const int DEFAULT_TIMEOUT = 60000;
+  static const unsigned int DEFAULT_TIMEOUT = 60000;
   RoomState _state;
   
   // BBSample *p_samples;
